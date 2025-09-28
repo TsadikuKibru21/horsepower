@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Create a security group category -->
+        <record id="advance_payment_category" model="ir.module.category">
+            <field name="name">Advance Payment</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Submitter Group -->
+        <record id="group_advance_payable_submit" model="res.groups">
+            <field name="name">Submit Advance Payment</field>
+            <field name="category_id" ref="advance_payment_category"/>
+        </record>
+
+     
+        <record id="group_advance_payable_validate" model="res.groups">
+            <field name="name">Validate Advance Payment</field>
+            <field name="category_id" ref="advance_payment_category"/>
+        </record>
+
+
+    </data>
+</odoo>

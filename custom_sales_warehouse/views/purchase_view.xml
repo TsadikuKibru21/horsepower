@@ -28,10 +28,7 @@
                  <xpath expr="(//button[@name='button_confirm'])[2]" position="attributes">
                         <attribute name="invisible">state != 'sent'</attribute>
                 </xpath>
-                 <xpath expr="//field[@name='currency_id']" position="after">
-                    <field name="project" readonly="1"/>
-            </xpath>
-
+              
         </field>
     </record>
 

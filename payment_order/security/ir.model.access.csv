@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_advance_payment,access_advance_payment,model_advance_payment,base.group_user,1,1,1,0
+
+access_advance_payment_line,access_advance_payment_line,model_advance_payment_line,base.group_user,1,1,1,1
+
+access_fs_number,fs.number,model_fs_number,base.group_user,1,1,1,0
+access_machine_code,machine.code,model_machine_code,base.group_user,1,1,1,0
+

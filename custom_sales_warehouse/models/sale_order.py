@@ -98,31 +98,19 @@ class SaleOrder(models.Model):
                 qty_remaining = qty_needed
                 warehouse = order.warehouse_id
 
-                _logger.info("Checking stock for product: %s, Quantity: %s in order: %s", product.name, qty_needed, order.name)
+              
 
-                # Step 1: Check stock in current warehouse (already reserved in draft state)
+               
                 stock_quant = self.env['stock.quant'].search([
                     ('product_id', '=', product.id),
                     ('location_id', '=', warehouse.lot_stock_id.id),
-                    # ('reserved_quantity', '>', 0)
+                    # ('quantity', '>', 0)
                 ], limit=1)
-
-                if stock_quant and stock_quant.reserved_quantity >= qty_needed:
-                    _logger.info("Using reserved stock for product: %s in warehouse %s for order %s",
-                                 product.name, warehouse.name, order.name)
-                    qty_remaining = 0
-                else:
-                    # Check unreserved stock if reservation was partial or failed
-                    stock_quant = self.env['stock.quant'].search([
-                        ('product_id', '=', product.id),
-                        ('location_id', '=', warehouse.lot_stock_id.id),
-                        # ('quantity', '>', 0)
-                    ], limit=1)
-                    if stock_quant and stock_quant.quantity > 0:
-                        qty_available = min(stock_quant.quantity - stock_quant.reserved_quantity, qty_needed)
-                        _logger.info("Found %s unreserved units in warehouse %s for product: %s",
-                                     qty_available, warehouse.name, product.name)
-                        qty_remaining -= qty_available
+                if stock_quant and stock_quant.inventory_quantity_auto_apply > 0:
+                    qty_available = min(stock_quant.inventory_quantity_auto_apply ,qty_needed)
+                    _logger.info("Found %s unreserved units in warehouse %s for product: %s",
+                                    qty_available, warehouse.name, product.name)
+                    qty_remaining -= qty_available
 
                 # Step 2: Check stock in other warehouses if needed
                 if qty_remaining > 0:
@@ -134,8 +122,8 @@ class SaleOrder(models.Model):
                         # ('quantity', '>', 0)
                     ], limit=1)
 
-                    if other_quant and other_quant.quantity > 0:
-                        qty_to_transfer = min(other_quant.quantity, qty_remaining)
+                    if other_quant and other_quant.inventory_quantity_auto_apply > 0:
+                        qty_to_transfer = min(other_quant.inventory_quantity_auto_apply, qty_remaining)
 
                         # Determine the source warehouse from the quant's location
                         source_warehouse = self.env['stock.warehouse'].search([

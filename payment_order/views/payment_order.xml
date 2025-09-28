@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+  <record id="view_advance_payment_tree" model="ir.ui.view">
+        <field name="name">advance.payment.tree</field>
+        <field name="model">advance.payment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="advance_type"/>
+                <field name="partner_id"/>
+                <field name="journal_id"/>
+                <field name="date"/>
+                
+                <field name="amount" sum="Untaxed Amount"/>
+                <field name="net_amount" sum="Total Amount"/>
+                <field name="company_id"/>
+                <field name="state"/>
+                
+                 <header>
+                    <button name="action_submit" type="object" string="Submit" groups="payment_order.group_advance_payable_submit" class="btn-primary" confirm="Are You Want TO Submit?"/>
+
+                    <button name="action_validate" type="object" string="Validate" groups="payment_order.group_advance_payable_validate" class="btn-primary" confirm="Are You Want TO Validate?"/>
+
+                </header>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_advance_payment_form" model="ir.ui.view">
+        <field name="name">advance.payment.form</field>
+        <field name="model">advance.payment</field>
+        <field name="arch" type="xml">
+            <form string="Advance Payment">
+
+                <header>
+                    <button name="action_submit" type="object" string="Submit" groups="payment_order.group_advance_payable_submit" class="btn-primary" invisible="state != 'draft'" confirm="Are You Want TO Submit?"/>
+                    <button name="action_validate" type="object" string="Validate" groups="payment_order.group_advance_payable_validate" class="btn-primary" invisible="state != 'submitted'" confirm="Are You Want TO Validate?"/>
+
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,validated"/>      
+                </header>
+                  <footer>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+                <sheet>
+                     <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_journal" icon="fa-tree" string="Journal" invisible="journal_count == 0">
+                            <field name="journal_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                <group>
+
+                    <group>
+                        <field name="name" readonly="1"/>
+                        
+                        <field name="advance_type" readonly="1"/>
+
+                        <field name="partner_id" required="1" options="{'no_create': True}" readonly="state == 'validated'"/>
+
+                        <field name="use_previous_fs" invisible="advance_type == 'send'" readonly="state in ['draft','validated']"/>
+                        <field name="fs_number" invisible="advance_type == 'send'" domain="[(('partner_id', '=', partner_id))] if use_previous_fs else [('id', '=', False)]" readonly="state in ['draft','validated']"/>
+                        <field name="machine_code" invisible="advance_type == 'send'" options="{'no_create': True}" readonly="state in ['draft','validated']"/>
+
+                        
+                        <field name="amount" readonly="state == 'validated'"/>
+
+                        <field name="tax_ids" widget="many2many_tags"  domain="[
+           ('type_tax_use', '=', 'sale' if advance_type == 'receive' else 'purchase')
+       ]" options="{'no_create': True}" readonly="state == 'validated'"/>
+                        <field name="net_amount" readonly="1"/>
+                        
+                    </group>
+                    <group>
+                        <field name="date" readonly="state in ['validated']"/>
+                        <field name="available_journal_ids" invisible="1"/>
+                        
+                        <field name="journal_id" readonly="state == 'validated'"/>
+                        <field name="ft" invisible="advance_type == 'send'" readonly="state == 'validated'"/>
+                        <field name="memo" invisible="advance_type == 'receive'" readonly="state == 'validated'"/>
+                        <field name="pay_to" invisible="advance_type == 'receive'" readonly="state == 'validated'"/>
+                        <field name="description" readonly="state == 'validated'"/>
+                        <field name="payment_code" readonly="state == 'validated'"/>
+                        <field name="cheque_no" invisible="payment_code != 'cheque'" readonly="state == 'validated'"/>
+
+                        <field name="cpo_no" invisible="payment_code != 'cpo'" readonly="state == 'validated'"/>
+                        <field name="agent_id" domain="[('share', '=', True)]" invisible="advance_type == 'send'" readonly="state == 'validated'"/>
+                        <field name="company_id" invisible="1" readonly="1"/>
+                            
+                        
+                    </group>
+                </group>
+                <!-- <notebook>
+                        <page string="Bank Lines" invisible="1">
+                            <field name="advance_payment_line_ids" readonly="state in ['validated']">
+                                <tree editable="bottom">
+                                    <field name="bank_name"/>
+                                    
+                                    <field name="ft"/>
+                                    <field name="amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook> -->
+                </sheet>
+                 <chatter/>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_advance_payment_receivable" model="ir.actions.act_window">
+        <field name="name">Receipt</field>
+        <field name="res_model">advance.payment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{"default_advance_type": "receive"}</field>
+        <field name="domain">[("advance_type", "=", "receive")]</field>
+    </record>
+
+    <record id="action_advance_payment_payable" model="ir.actions.act_window">
+        <field name="name">Payment</field>
+        <field name="res_model">advance.payment</field>
+        <field name="view_mode">tree,form</field>
+
+        <field name="context">{"default_advance_type": "send"}</field>
+        <field name="domain">[("advance_type", "=", "send")]</field>
+    </record>
+  
+       
+
+        <menuitem id="account.menu_action_account_payments_receivable" name="Receipt" parent="account.menu_finance_receivables" groups="payment_order.group_advance_payable_submit,payment_order.group_advance_payable_validate" action="action_advance_payment_receivable"/>
+        <menuitem id="account.menu_action_account_payments_payable" name="Payment" parent="account.menu_finance_payables" groups="payment_order.group_advance_payable_submit,payment_order.group_advance_payable_validate" action="action_advance_payment_payable"/>
+
+</odoo>

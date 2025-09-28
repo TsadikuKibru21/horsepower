@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_payment_order_system,payment.order (system),model_payment_order,,1,1,1,1
-access_cheque_payment_voucher,cheque.payment.voucher,model_cheque_payment_voucher,,1,1,1,0
-access_cheque_payment_voucher_line,cheque.payment.voucher.line,model_cheque_payment_voucher_line,,1,1,1,0
-

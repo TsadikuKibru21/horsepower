@@ -1,0 +1,38 @@
+<odoo>
+    <record id="view_machine_code_form" model="ir.ui.view">
+        <field name="name">machine.code.form</field>
+        <field name="model">machine.code</field>
+        <field name="arch" type="xml">
+            <form string="Machine Code">
+                <sheet>
+                   <group>
+                     <field name="name"/>
+                    </group>
+                  
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_machine_code_tree" model="ir.ui.view">
+        <field name="name">machine.code.tree</field>
+        <field name="model">machine.code</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+               
+            </tree>
+        </field>
+    </record>
+
+  
+    <record id="action_machine_code" model="ir.actions.act_window">
+        <field name="name">Machine Code</field>
+        <field name="res_model">machine.code</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_machine_code" name="Machine Code" parent="account.account_account_menu" groups="account.group_account_invoice" action="action_machine_code"/>
+
+</odoo>
