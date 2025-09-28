@@ -65,7 +65,7 @@
                         </group>
                         <notebook>
                             <page name="reqeust_lines" string="Request Lines">
-                                <field name="request_lines" >
+                                <field name="request_lines" invisible="state == 'approved'">
                                     <tree editable="bottom">
                                         <field name="product_id" readonly="parent.state not in  ['draft']"/>
                                         

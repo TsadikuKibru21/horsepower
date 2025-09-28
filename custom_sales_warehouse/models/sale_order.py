@@ -42,11 +42,8 @@ class SaleOrder(models.Model):
     def action_approve(self):
         for order in self:
             
-            result = order._reserve_stock()
-            if result:
-                return result
+            
             order.state = 'approved'
-        return True
 
 
     @api.depends('user_id')
@@ -57,150 +54,10 @@ class SaleOrder(models.Model):
             ], limit=1)
             order.team = team.team if team else False
 
-    def action_cancel(self):
-        """Cancel the sale order and unreserve stock."""
-        for order in self:
-            # Unreserve stock before canceling
-            order._unreserve_stock()
-            _logger.info("Unreserved stock for order %s", order.name)
-        # Call the parent action_cancel to handle standard cancellation
-        res = super(SaleOrder, self).action_cancel()
-        _logger.info("Completed action_cancel for orders: %s", self.mapped('name'))
-        return res
+  
+   
+
     
-    def _unreserve_stock(self):
-        """Unreserve stock for sale order lines."""
-        for order in self:
-            warehouse = order.warehouse_id
-            if not warehouse:
-                _logger.warning("No warehouse defined for sale order %s, skipping unreservation", order.name)
-                continue
-
-            for line in order.order_line:
-                product = line.product_id
-                qty_to_unreserve = line.product_uom_qty
-                _logger.info("Attempting to unreserve %s units of product %s for order %s",
-                             qty_to_unreserve, product.name, order.name)
-
-                # Find reserved stock in the warehouse
-                stock_quant = self.env['stock.quant'].search([
-                    ('product_id', '=', product.id),
-                    ('location_id', '=', warehouse.lot_stock_id.id),
-                    # ('reserved_quantity', '>', 0),
-                ], limit=1)
-
-                if stock_quant and stock_quant.reserved_quantity >= qty_to_unreserve:
-                    # Unreserve stock by updating quant with negative quantity
-                    stock_quant._update_reserved_quantity(
-                        product_id=product,
-                        location_id=warehouse.lot_stock_id,
-                        quantity=-qty_to_unreserve,
-                    
-                    )
-                    _logger.info("Unreserved %s units of product %s in warehouse %s for order %s",
-                                 qty_to_unreserve, product.name, warehouse.name, order.name)
-                else:
-                    _logger.warning("No reserved stock found for product %s in warehouse %s for order %s",
-                                    product.name, warehouse.name, order.name)
-
-    def _reserve_stock(self):
-        """Reserve stock for sale order lines when reaching draft state."""
-        for order in self:
-            _logger.info("Starting stock reservation for Sale Order: %s", order.name)
-            
-            warehouse = order.warehouse_id
-            if not warehouse:
-                _logger.error("No warehouse defined for Sale Order: %s", order.name)
-                raise UserError(f"No warehouse defined for sale order {order.name}")
-            
-            _logger.info("Using warehouse: %s", warehouse.name)
-
-            insufficient_products = []
-            for line in order.order_line:
-                product = line.product_id
-                qty_needed = line.product_uom_qty
-                _logger.info("Checking line: Product %s, Quantity needed: %s", product.name, qty_needed)
-
-                # Search available stock
-                stock_quant = self.env['stock.quant'].search([
-                    ('product_id', '=', product.id),
-                    ('location_id', '=', warehouse.lot_stock_id.id),
-                    ('quantity', '>', 0),
-                ], limit=1)
-
-                if stock_quant:
-                    _logger.info("Found stock quant: Product %s, Total Qty: %s, Reserved: %s, Available: %s",
-                                product.name, stock_quant.quantity, stock_quant.reserved_quantity,
-                                stock_quant.quantity - stock_quant.reserved_quantity)
-                else:
-                    _logger.warning("No stock quant found for product %s in warehouse %s", product.name, warehouse.name)
-
-                available_qty = stock_quant.quantity - stock_quant.reserved_quantity if stock_quant else 0.0
-
-                if qty_needed > available_qty:
-                    _logger.warning("Insufficient stock for product %s: Needed %s, Available %s",
-                                    product.name, qty_needed, available_qty)
-                    insufficient_products.append({
-                        'product_id': product.id,
-                        'product_name': product.name,
-                        'qty_needed': qty_needed,
-                        'qty_available': available_qty,
-                        'order_id': order.id,
-                    })
-                else:
-                    _logger.info("Sufficient stock available. Reserving %s units of product %s",
-                                qty_needed, product.name)
-                    stock_quant._update_reserved_quantity(
-                        product_id=product,
-                        location_id=warehouse.lot_stock_id,
-                        quantity=qty_needed
-                    )
-                    _logger.info("Successfully reserved %s units of %s in warehouse %s for order %s",
-                                qty_needed, product.name, warehouse.name, order.name)
-
-            if insufficient_products:
-                _logger.warning("Some products have insufficient stock for order %s", order.name)
-                message = "The following products have insufficient stock:\n"
-                for item in insufficient_products:
-                    message += f"- {item['product_name']}: Needed {item['qty_needed']}, Available {item['qty_available']}\n"
-                    _logger.debug("Insufficient: %s - Needed: %s, Available: %s",
-                                item['product_name'], item['qty_needed'], item['qty_available'])
-
-                message += "Do you want to reserve the available quantity?"
-
-                _logger.info("Creating wizard for insufficient stock notification")
-                wizard = self.env['sale.order.stock.wizard'].create({
-                    'message': message,
-                    'order_id': order.id,
-                    'product_data': [(0, 0, {
-                        'product_id': item['product_id'],
-                        'qty_needed': item['qty_needed'],
-                        'qty_available': item['qty_available'],
-                    }) for item in insufficient_products]
-                })
-
-                _logger.info("Wizard created: %s, returning form view for user confirmation", wizard.id)
-                # return {
-                #     'type': 'ir.actions.act_window',
-                #     'res_model': 'sale.order.stock.wizard',
-                #     'view_mode': 'form',
-                #     'res_id': wizard.id,
-                #     'target': 'new',
-                # }
-                return {
-                    'type': 'ir.actions.act_window',
-                    'name': 'Insufficient Stock Warning',
-                    'res_model': 'sale.order.stock.wizard',
-                    'view_mode': 'form',
-                    'res_id': wizard.id,
-                    'target': 'new',
-            }
-
-            
-            _logger.info("Stock reservation completed for order %s", order.name)
-        return False
-                    # Optionally raise an error or notify user
-                    # raise UserError(f"Insufficient stock for product {product.name} in warehouse {warehouse.name}")
 
     def action_confirm(self):
         valid_states = ['draft', 'sent', 'approved']
@@ -338,52 +195,3 @@ class SaleOrder(models.Model):
         _logger.info("Completed action_confirm for orders: %s", self.mapped('name'))
         return res
 
-
-class SaleOrderStockWizard(models.TransientModel):
-    _name = 'sale.order.stock.wizard'
-    _description = 'Sale Order Stock Reservation Wizard'
-
-    message = fields.Text(string='Message', readonly=True)
-    order_id = fields.Many2one('sale.order', string='Sale Order', readonly=True)
-    product_data = fields.One2many('sale.order.stock.wizard.line', 'wizard_id', string='Product Data')
-
-    def action_reserve_remaining(self):
-        """Reserve the available stock for products in the wizard."""
-        for wizard in self:
-            order = wizard.order_id
-            warehouse = order.warehouse_id
-            for line in wizard.product_data:
-                product = line.product_id
-                qty_to_reserve = min(line.qty_needed, line.qty_available)
-                if qty_to_reserve > 0:
-                    stock_quant = self.env['stock.quant'].search([
-                        ('product_id', '=', product.id),
-                        ('location_id', '=', warehouse.lot_stock_id.id),
-                        # ('quantity', '>', 0),
-                        # ('reserved_quantity', '<', 'quantity'),
-                    ], limit=1)
-                    if stock_quant:
-                        stock_quant._update_reserved_quantity(
-                            product_id=product,
-                            location_id=warehouse.lot_stock_id,
-                            quantity=qty_to_reserve,
-                            # lot_id=False,
-                            # package_id=False,
-                            # owner_id=False,
-                            # strict=True
-                        )
-                        _logger.info("Reserved %s units of product %s in warehouse %s for order %s",
-                                     qty_to_reserve, product.name, warehouse.name, order.name)
-            # Proceed to draft state after reserving available stock
-            order.state = 'approved'
-        return {'type': 'ir.actions.act_window_close'}
-
-
-class SaleOrderStockWizardLine(models.TransientModel):
-    _name = 'sale.order.stock.wizard.line'
-    _description = 'Sale Order Stock Wizard Line'
-
-    wizard_id = fields.Many2one('sale.order.stock.wizard', string='Wizard', required=True, ondelete='cascade')
-    product_id = fields.Many2one('product.product', string='Product', readonly=True)
-    qty_needed = fields.Float(string='Quantity Needed', readonly=True)
-    qty_available = fields.Float(string='Quantity Available', readonly=True)

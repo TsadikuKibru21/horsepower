@@ -5,6 +5,3 @@ access_sales_from,access_sales_from,model_sales_from,,1,1,1,1
 access_customer_enquiry,access_customer_enquiry,model_customer_enquiry,,1,1,1,1
 access_customer_enquiry_report,access_customer_enquiry_report,model_customer_enquiry_report,,1,1,1,1
 
-access_sale_order_stock_wizard,sale.order.stock.wizard,model_sale_order_stock_wizard,,1,1,1,1
-
-access_sale_order_stock_wizard_line,sale.order.stock.wizard.line,model_sale_order_stock_wizard_line,,1,1,1,1
