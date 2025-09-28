@@ -24,9 +24,6 @@
                 </td>
             </xpath>
             <!-- Add total row for amount_total after the last line -->
-               <xpath expr="//table[@class='o_has_total_table table o_main_table table-borderless']/thead/tr/th[@name='th_taxes']" position="replace"/>
-               
-            <xpath expr="//table[@class='o_has_total_table table o_main_table table-borderless']/tbody//td[@name='td_taxes']" position="replace"/>
         </template>
     </data>
 </odoo>
