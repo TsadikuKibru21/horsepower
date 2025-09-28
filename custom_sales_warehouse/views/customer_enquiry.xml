@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
                 <field name="customer_rank" invisible="1"/>
-                <page string="Customer Enquiry" invisible="customer_rank &lt;= 0">
+                <page string="Customer Enquiry">
                     <field name="enquiry_ids">
                         <tree editable="bottom">
                             <field name="product_id"/>
