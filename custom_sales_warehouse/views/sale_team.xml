@@ -1,0 +1,13 @@
+<odoo>
+    <record id="crm_team_view_form_inherit_team_selection" model="ir.ui.view">
+        <field name="name">crm.team.form.inherit.team.selection</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Add the team field after the name field -->
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="team"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

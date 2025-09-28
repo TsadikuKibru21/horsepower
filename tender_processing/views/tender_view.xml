@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_tender_process_tree" model="ir.ui.view">
+        <field name="name">tender.process.tree</field>
+        <field name="model">tender.process</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="name"/>
+                <field name="purchase_request"/>
+                <field name="vendor"/>
+                <field name="product"/>
+                <field name="quantity"/>
+                <field name="uom"/>
+                <field name="price"/>
+                <field name="total_price"/>
+                <field name="is_winner" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_tender_process_form" model="ir.ui.view">
+        <field name="name">tender.process.form</field>
+        <field name="model">tender.process</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <header>
+                    <button name="set_winner" type="object" string="Set as Winner" class="oe_highlight" 
+                          
+                            />
+                    <field name="is_winner" widget="boolean_toggle" readonly="1"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="purchase_request" required="1"/>
+                            <field name="vendor" required="1"/>
+                        </group>
+                        <group>
+                            <field name="product" required="1" domain="[('id','in',prod_domain)]"/>
+                            <field name="prod_domain" invisible="1"/>
+                            <field name="quantity" required="1"/>
+                            <field name="price" required="1"/>
+                            <field name="total_price" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_tender_process" model="ir.actions.act_window">
+        <field name="name">Tender Processes</field>
+        <field name="res_model">tender.process</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create a new tender process
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_tender_process_root"
+              name="Tender Processes"
+              sequence="10"/>
+              
+    <menuitem id="menu_tender_process"
+              name="Tenders"
+              parent="menu_tender_process_root"
+              action="action_tender_process"
+              sequence="10"/>
+</odoo>

@@ -1,0 +1,29 @@
+<odoo>
+    <template id="report_purchase_request_inherit_sale" inherit_id="tender_processing.report_purchase_request">
+        <xpath expr="//p[strong[text()='Requested By:']]" position="replace">
+            <t t-if="not doc.sale_order">
+                <p>
+                    <strong>Requested By:</strong>
+                    <u><t t-esc="doc.requested_by.name"/></u>
+                </p>
+            </t>
+            <t t-if="doc.sale_order">
+                <p>
+                    <strong>Sale Order:</strong>
+                    <u><t t-esc="doc.sale_order.name"/></u>
+                </p>
+            </t>
+        </xpath>
+         <xpath expr="//p[strong[text()='Requested Date:']]" position="replace">
+            <t t-if="not doc.sale_order">
+                <p>
+                    <strong>Requested Date:</strong>
+                    <u><t t-esc="doc.requested_date"/></u>
+                </p>
+            </t>
+        </xpath>
+        <xpath expr="//p[strong[normalize-space(text())='Purchase Type:']]" position="replace">
+        
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,84 @@
+<odoo>
+    <record id="view_order_form_inherit_team_field" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.team</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+          
+            <!-- Restrict Print Button -->
+             <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="statusbar_visible">draft,to_approve,approved,sent,sale,done</attribute>
+
+            </xpath>
+
+            <xpath expr="(//button[@name='action_confirm'])[1]" position="attributes">
+                <attribute name="groups">custom_sales_warehouse.group_sale_order_approver</attribute>
+                <attribute name="invisible">state not in ('sent')</attribute>
+            </xpath>
+            <!-- Hide other action buttons for Sale Creator -->
+            <xpath expr="(//button[@name='action_confirm'])[2]" position="attributes">
+                <attribute name="groups">custom_sales_warehouse.group_sale_order_approver</attribute>
+                <attribute name="invisible">state not in ('approved')</attribute>
+            </xpath>
+             <xpath expr="//button[@name='action_preview_sale_order']" position="attributes">
+                <attribute name="groups">custom_sales_warehouse.group_sale_order_approver</attribute>
+            <attribute name="invisible">state in ('approved')</attribute>
+
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="attributes">
+                <attribute name="groups">custom_sales_warehouse.group_sale_order_approver</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_quotation_send']" position="attributes">
+                <attribute name="groups">custom_sales_warehouse.group_sale_order_approver</attribute>
+                <attribute name="invisible">state not in ('approved')</attribute>
+
+            </xpath>
+
+            <xpath expr="//header" position="inside">
+                <button name="action_submit_for_approval"
+                        string="Submit"
+                        type="object"
+                        invisible="state != 'draft'"
+                        groups="custom_sales_warehouse.group_sale_order_creator"
+                        class="btn-primary"/>
+                <button name="action_approve"
+                        string="Approve"
+                        type="object"
+                        invisible="state != 'to_approve'"
+                        groups="custom_sales_warehouse.group_sale_order_approver"
+                        class="btn-success"/>
+                
+                <button name="action_print_quotation_order"
+                        type="object"
+                        string="Print Quotation/Order"
+                        invisible="state in ['to_approve','draft']"
+                        class="btn btn-primary"
+                        icon="fa-print"/>
+                <button name="action_print_pro_forma"
+                        type="object"
+                        string="Print PRO-FORMA"
+                        invisible="state in ['to_approve','draft']"
+                        class="btn btn-secondary"
+                        icon="fa-print"/>
+            </xpath>
+
+     
+                <!-- Add after user_id -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="team" readonly="1"/>
+                <field name="sales_from_id" widget="many2many_tags" readonly="state in ['sale','done']"/>
+            </xpath>
+             <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="quotation_status" readonly="state in ['sale','done']"/>
+            </xpath>
+            
+          
+        </field>
+        
+
+        
+    </record>
+
+
+       
+</odoo>

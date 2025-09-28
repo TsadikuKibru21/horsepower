@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+<record id="view_customer_enquiry_report_tree" model="ir.ui.view">
+    <field name="name">customer.enquiry.report.tree</field>
+    <field name="model">customer.enquiry.report</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="start_date"/>
+            <field name="end_date"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_customer_enquiry_report_form" model="ir.ui.view">
+    <field name="name">customer.enquiry.report.form</field>
+    <field name="model">customer.enquiry.report</field>
+    <field name="arch" type="xml">
+        <form string="Customer Enquiry Report">
+        <sheet>
+            <group>
+                <field name="start_date"/>
+                <field name="end_date"/>
+            </group>
+            <group>
+                <field name="file_name" readonly="1" invisible="1"/>
+                <field name="file_data" filename="file_name" readonly="1"/>
+            </group>
+                <button name="action_generate_report" type="object" string="Generate XLSX" class="btn-primary"/>
+        </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="action_customer_enquiry_report" model="ir.actions.act_window">
+    <field name="name">Customer Enquiry Report</field>
+    <field name="res_model">customer.enquiry.report</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+
+<menuitem id="menu_customer_enquiry_report" name="Customer Enquiry Report"
+          parent="sale.menu_sale_report"
+          action="action_customer_enquiry_report"/>
+</odoo>

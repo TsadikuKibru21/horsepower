@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_purchase_request">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <div class="col-6">
+                                <p>
+                                    <strong>Request Name:</strong>
+                                    <u>
+                                        <t t-esc="doc.name"/>
+                                    </u>
+                                </p>
+                                <t t-if="doc.store_request_id">
+                                <p>
+                                    <strong>Store Request:</strong>
+                                    <u>
+                                        <t t-esc="doc.store_request_id.name"/>
+                                    </u>
+                                </p>
+                                </t>
+                                <p>
+                                    <strong>Requested By:</strong>
+                                    <u>
+                                        <t t-esc="doc.requested_by.name"/>
+                                    </u>
+                                </p>
+                                <p>
+                                    <strong>Requested Date:</strong>
+                                    <u>
+                                        <t t-esc="doc.requested_date"/>
+                                    </u>
+                                </p>
+                            </div>
+                            <div class="col-6">
+                                <p>
+                                    <strong>Purchase Type:</strong>
+                                    <u>
+                                        <t t-esc="doc.purchase_type"/>
+                                   
+                                    </u>
+
+                                </p>
+                                 <t t-if="doc.purchase_type != 'direct'">
+                                    <p>
+                                        <strong>Start date:</strong>
+                                        <u>
+                                            <t t-esc="doc.start_date"/>
+                                        </u>
+                                    </p>
+                                </t>
+                                 <t t-if="doc.purchase_type != 'direct'">
+                                    <p>
+                                        <strong>End Date:</strong>
+                                        <u>
+                                            <t t-esc="doc.end_date"/>
+                                        </u>
+                                    </p>
+                                </t>
+                                <t t-if="doc.purchase_type == 'direct'">
+                                    <p>
+                                        <strong>Vendor:</strong>
+                                        <u>
+                                            <t t-esc="doc.vendor_id.name"/>
+                                        </u>
+                                    </p>
+                                </t>
+                            </div>
+                        </div>
+                        <h3 class="text-start">Request Lines</h3>
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <th>#</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Of Measurement</th>
+                                <th>Unit Price</th>
+                                <t t-if="doc.purchase_type != 'direct'">
+                                    <th>Wining Vendor</th>
+                                </t>
+                                <th>Total</th>
+                            </thead>
+                            <tbody>
+                                <t t-set="counter" t-value="1"/>
+                                <t t-foreach="doc.request_lines" t-as="line">
+                                    <tr>
+                                        <th>
+                                            <t t-esc="counter"/>
+                                        </th>
+                                        <td>
+                                            <t t-esc="line.product_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line.quantity"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line.uom_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line.unit_price"/>
+                                        </td>
+                                        <t t-if="doc.purchase_type != 'direct'">
+                                            <td>
+                                                <t t-esc="line.vendor.name"/>
+                                            </td>
+                                        </t>
+                                        <td>
+                                            <t t-esc="line.subtotal"/>
+                                        </td>
+                                    </tr>
+                                    <t t-set="counter" t-value="counter+1"/>
+                                </t>
+                            </tbody>
+                        </table>
+                        <t t-if="doc.purchase_type != 'direct'">
+                            <h3 class="text-start">Tender Lines</h3>
+                            <div class="row">
+                                <table class="table">
+                                    <thead class="thead-dark">
+                                        <th>#</th>
+                                        <th>Wining Vendor</th>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Of Measurement</th>
+                                        <th>Unit Price</th>
+                                        <th>Total</th>
+                                        <th>Is Winner</th>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="counter" t-value="1"/>
+                                        <t t-foreach="doc.tenderprocess_lines" t-as="line">
+                                            <tr>
+                                                <th>
+                                                    <t t-esc="counter"/>
+                                                </th>
+                                                <td>
+                                                    <t t-esc="line.vendor.name"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line.product.name"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line.quantity"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line.uom.name"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line.price"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line.total_price"/>
+                                                </td>
+                                                <td>
+                                                    <t t-if="line.is_winner">Yes</t>
+                                                    <t t-if="not line.is_winner">No</t>
+                                                </td>
+                                            </tr>
+                                            <t t-set="counter" t-value="counter+1"/>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+                        <div class="row">
+                            <div class="col-4">
+                                <t t-if="doc.prepared_by">
+                                    <p>Prepared By:
+                                        <t t-esc="doc.prepared_by.name"/>
+                                    </p>
+                                </t>
+                                <t t-if="doc.prepared_date">
+                                    <p>Prepared Date:
+                                        <t t-esc="doc.prepared_date"/>
+                                    </p>
+                                </t>
+                            </div>
+                            <div class="col-4">
+                                <t t-if="doc.checked_by">
+                                    <p>Checked By:
+                                        <t t-esc="doc.checked_by.name"/>
+                                    </p>
+                                </t>
+                                <t t-if="doc.checked_date">
+                                    <p>Checked Date:
+                                        <t t-esc="doc.checked_date"/>
+                                    </p>
+                                </t>
+                            </div>
+                            <div class="col-4">
+                                <t t-if="doc.approved_by">
+                                    <p>Approved By:
+                                        <t t-esc="doc.approved_by.name"/>
+                                    </p>
+                                </t>
+                                <t t-if="doc.approved_date">
+                                    <p>Approved Date:
+                                        <t t-esc="doc.approved_date"/>
+                                    </p>
+                                </t>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    <record id="action_report_purchase_request" model="ir.actions.report">
+        <field name="name">Print PR</field>
+        <field name="model">purchase.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tender_processing.report_purchase_request</field>
+        <field name="report_file">tender_processing.report_purchase_request</field>
+        <field name="print_report_name">'%s' % object.name</field>
+        <field name="binding_model_id" ref="model_purchase_request"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

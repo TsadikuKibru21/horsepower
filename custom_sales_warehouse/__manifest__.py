@@ -1,0 +1,30 @@
+{
+    'name': "Custom Sales Warehouse",
+    'version': '1.0',
+    'summary': 'Custom module for sales teams with warehouse pull and purchase order automation',
+    'description': """
+        Custom Odoo 17 module to manage two sales teams (Direct Sales and Estimated Tender) with separate approvers,
+        and automate warehouse pull operations or purchase order creation based on product availability.
+    """,
+    'author': "Your Name",
+    'depends': ['sale_management', 'stock', 'purchase','sale_pdf_quote_builder','store_request'],
+    'data': [
+        'security/groups.xml',
+        'security/ir.model.access.csv',
+        'views/sale_team.xml',
+        'views/sale_order.xml',
+        'views/purchase_view.xml',
+        'views/purchase_request.xml',
+        'views/customer_enquiry.xml',
+        'views/customer_enquiry_report.xml',
+        'views/stock_route.xml',
+        'views/sales_from.xml',
+        'views/stock_warehouse.xml',
+        'views/res_partner.xml',
+        'report/reports.xml',
+        'report/sale_order.xml',
+        'report/purchase_request_report.xml',
+    ],
+    'installable': True,
+    'application': False,
+}

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_pdf_quote_builder.action_report_saleorder_raw" model="ir.actions.report">
+        <field name="name">Quotation / Order</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sale.report_saleorder_raw</field>
+        <field name="report_file">sale.report_saleorder_raw</field>
+        <field name="print_report_name">(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="sale.action_report_saleorder" model="ir.actions.report">
+            <field name="name">Quotation / Order</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">sale.report_saleorder</field>
+            <field name="report_file">sale.report_saleorder</field>
+            <field name="print_report_name">(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+            <field name="groups_id" eval="[(4, ref('base.group_no_one'))]"/>
+
+          
+    </record>
+
+    <record id="sale.action_report_pro_forma_invoice" model="ir.actions.report">
+        <field name="name">PRO-FORMA Invoice</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sale.report_saleorder_pro_forma</field>
+        <field name="report_file">sale.report_saleorder_pro_forma</field>
+        <field name="print_report_name">'PRO-FORMA - %s' % (object.name)</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+        <field name="groups_id" eval="[(4, ref('base.group_no_one'))]"/>
+    </record>
+
+
+     <record id="sale.action_sale_order_generate_link" model="ir.actions.act_window">
+        <field name="name">Generate a Payment Link</field>
+        <field name="res_model">payment.link.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="payment.payment_link_wizard_view_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+     <record id="sale.model_sale_order_action_quotation_sent" model="ir.actions.server">
+        <field name="name">Mark Quotation as Sent</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_quotation_sent()</field>
+    </record>
+
+     <record id="sale.model_sale_order_action_share" model="ir.actions.server">
+        <field name="name">Share</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_share()</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_order_creator,access_sale_order_creator,model_sale_order,group_sale_order_creator,1,0,1,0
+access_sale_order_approver,access_sale_order_approver,model_sale_order,group_sale_order_approver,1,1,0,0
+access_sales_from,access_sales_from,model_sales_from,,1,1,1,1
+access_customer_enquiry,access_customer_enquiry,model_customer_enquiry,,1,1,1,1
+access_customer_enquiry_report,access_customer_enquiry_report,model_customer_enquiry_report,,1,1,1,1
+
