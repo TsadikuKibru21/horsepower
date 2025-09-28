@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_request_tender_processing_view" model="ir.ui.view">
+        <field name="name">purchase.request.view.form.tender.processing</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="store_request.view_purchase_request_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="tender_computed" invisible='1' />
+                <button name="compute_winners" type="object" string="Compute Winners" class="oe_highlight"
+                        invisible="state not in ['prepared','draft'] or tender_computed or purchase_type == 'direct'" />
+                <button string="Create PO" name="create_po" type="object" class="btn btn-success" groups="store_request.group_pr_confirm,store_request.group_purchase_manager,store_request.group_purchase_officer" invisible="not tender_computed or state == 'draft' or purchase_order_count != 0 or state != 'approved'"/>
+            </xpath>
+            <xpath expr="//notebook/page[@name='reqeust_lines']" position="after">
+                <page name="tender_lines" string="Tender Processes" invisible="purchase_type == 'direct'">
+                    <field name="tenderprocess_lines" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="product" required="1" domain="[('id','in',prod_domain)]"/>
+                            <field name="prod_domain" invisible="1" nolabel="1"/>
+                            <field name="vendor"/>
+                            <field name="quantity"/>
+                            <field name="price"/>
+                            <field name="total_price"/>
+                            <field name="is_winner" widget="boolean_toggle" readonly="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+           
+        </field>
+    </record>
+</odoo>

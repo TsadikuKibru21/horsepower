@@ -1,0 +1,15 @@
+
+<odoo>
+    <record id="view_stock_route_inherit_team_field" model="ir.ui.view">
+        <field name="name">stock.route.form.inherit.team</field>
+        <field name="model">stock.route</field>
+        <field name="inherit_id" ref="stock.stock_location_route_form_view"/>
+        <field name="arch" type="xml">
+          
+             <xpath expr="//field[@name='product_selectable']" position="after">
+                <field name="is_custom_stock_flow"/>
+
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+<odoo>
+
+    <record id="view_warehouse_form_inherit_manager" model="ir.ui.view">
+        <field name="name">stock.warehouse.form.inherit.manager</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="warehouse_manager_ids" widget="many2many_tags"/>
+            </xpath>
+
+        </field>
+    </record>
+
+      <record id="view_picking_form_inherit_warehouse_managers" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit.warehouse.managers</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_validate']" position="after">
+                            <field name="show_validate_button" invisible="1"/>
+                </xpath>
+                <!-- Modify the Validate button to be visible only to warehouse managers -->
+                <xpath expr="(//button[@name='button_validate'])[1]" position="attributes">
+                            <attribute name="invisible">state in ('draft', 'confirmed', 'done', 'cancel') or not show_validate_button</attribute>
+                </xpath>
+                 <xpath expr="(//button[@name='button_validate'])[2]" position="attributes">
+                            <attribute name="invisible">state in ('waiting', 'assigned', 'done', 'cancel') or not show_validate_button</attribute>
+                </xpath>
+            </field>
+        </record>
+</odoo>

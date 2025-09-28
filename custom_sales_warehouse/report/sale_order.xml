@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit Sale Order Report Template -->
+        <template id="report_saleorder_document_inherit_sales_from" inherit_id="sale.report_saleorder_document">
+             <!-- <xpath expr="//div[@t-if='doc.user_id.name']" position="after">
+                <div t-if="doc.sales_from_id" class="col-auto col-3 mw-100 mb-2">
+                    <strong>Sales From:</strong><br/>
+                    <span t-field="doc.sales_from_id.name"/><br/>
+                
+                </div>
+            </xpath> -->
+
+            <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/thead//th[descendant::span[text()='Amount']]" position="replace">
+                <th name="th_amount_total" class="text-end">
+                    <span>Amount Total</span>
+                </th>
+            </xpath>
+            <!-- Replace Amount column data with empty cells for regular lines -->
+          
+             <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/tbody//td[@name='td_subtotal' and not(ancestor::tr/@class='is-subtotal')]" position="replace">
+                <td name="td_amount_total" class="text-end">
+                    <span t-out="line.price_total" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                </td>
+            </xpath>
+            <!-- Add total row for amount_total after the last line -->
+            
+        </template>
+    </data>
+</odoo>

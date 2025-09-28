@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_sales_from_tree" model="ir.ui.view">
+        <field name="name">sales.from.tree</field>
+        <field name="model">sales.from</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="product"/>
+                <field name="reference"/>
+                <field name="quantity"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sales_from_form" model="ir.ui.view">
+        <field name="name">sales.from.form</field>
+        <field name="model">sales.from</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="product"/>
+                    </group>
+                    <group>
+                        <field name="reference"/>
+                        <field name="quantity"/>
+                    </group>
+                </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+     <record id="action_sales_from" model="ir.actions.act_window">
+            <field name="name">Sales From</field>
+            <field name="res_model">sales.from</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+   <menuitem
+        id="menu_sales_from"
+        name="Sales From"
+        parent="sale.menu_sale_config"
+        action="action_sales_from"
+        sequence="10"
+    />
+
+</odoo>
