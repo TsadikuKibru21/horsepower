@@ -24,7 +24,15 @@
                 </td>
             </xpath>
             <!-- Add total row for amount_total after the last line -->
-            z
+              <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/thead/tr/th[@name='th_description']" position="before">
+            <th class="text-start">No</th>
+        </xpath>
+
+        <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/tbody//td[@name='td_name']" position="before">
+            <td class="text-start">
+                <span t-field="line.order_sequence"/>
+            </td>
+        </xpath>
         </template>
     </data>
 </odoo>
