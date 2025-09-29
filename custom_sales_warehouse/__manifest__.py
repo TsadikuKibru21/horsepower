@@ -22,7 +22,7 @@
         'views/res_partner.xml',
         'report/reports.xml',
         'report/sale_order.xml',
-        # 'report/purchase_request_report.xml',
+        'report/invoice.xml',
     ],
     'installable': True,
     'application': False,

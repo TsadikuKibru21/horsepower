@@ -1,0 +1,27 @@
+<odoo>
+    <template id="report_invoice_document_inherit_signatures" inherit_id="account.report_invoice_document">
+        
+        <!-- Add Ordered By, Invoice Created By, Confirmed By at the end -->
+        <xpath expr="//div[@id='payment_term']" position="after">
+            <div class="mt-5">
+                <table class="table table-sm table-borderless" style="width:100%;">
+                    <tr>
+                        <td style="width: 33%; text-align: center;">
+                            <strong>Ordered By</strong><br/>
+                            <span t-esc="o.invoice_origin and o.env['sale.order'].sudo().search([('name', '=', o.invoice_origin)], limit=1).user_id.name or ''"/>
+                        </td>
+                        <td style="width: 33%; text-align: center;">
+                            <strong>Invoice Created By</strong><br/>
+                            <span t-esc="o.create_uid.name"/>
+                        </td>
+                        <td style="width: 33%; text-align: center;">
+                            <strong>Confirmed By</strong><br/>
+                            <span t-esc="o.user_id.name"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </xpath>
+
+    </template>
+</odoo>
