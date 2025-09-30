@@ -1,6 +1,8 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import formatLang
+from odoo.tools import float_round
+
 import logging
 _logger = logging.getLogger(__name__)
 class AccountMove(models.Model):
@@ -53,7 +55,7 @@ class AdvancePayment(models.Model):
     # _rec_name = 'partner_id'
     name = fields.Char(string="Reference", copy=False, readonly=True,default=lambda self: _('New'))
     partner_id = fields.Many2one('res.partner', string='Partner',track_visibility='always')
-    amount = fields.Float(string='Untaxed Amount', required=True,track_visibility='always')
+    amount = fields.Float(string='B. VAT', required=True,track_visibility='always')
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id.id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today,track_visibility='always')
     journal_id = fields.Many2one('account.journal', domain="[('id', 'in', available_journal_ids)]", string='Bank',track_visibility='always')
@@ -167,16 +169,18 @@ class AdvancePayment(models.Model):
     @api.depends('amount', 'tax_ids')
     def _compute_net_amount(self):
         for record in self:
+            currency_precision = record.currency_id.decimal_places or 2
             # Tax calculation
             tax_value = 0.0
             for tax in record.tax_ids:
                 if tax.amount_type == 'percent':
-                    tax_value += (record.amount * tax.amount) / 100.0
+                    tax_value += float_round((record.amount * tax.amount) / 100.0, precision_digits=currency_precision)
                 elif tax.amount_type == 'fixed':
-                    tax_value += tax.amount
+                    tax_value += float_round(tax.amount, precision_digits=currency_precision)
 
-            record.tax_amount = tax_value
-            record.net_amount = record.amount +tax_value
+            record.tax_amount = float_round(tax_value, precision_digits=currency_precision)
+            record.net_amount = float_round(record.amount + tax_value, precision_digits=currency_precision)
+    
     
     @api.model
     def create(self, vals):
@@ -265,6 +269,7 @@ class AdvancePayment(models.Model):
                 raise ValidationError(_("Partner must have a receivable or payable account configured."))
 
             move_lines = []
+            currency_precision = rec.currency_id.decimal_places or 3  # Use currency's precision (default to 2)
 
             # Reference for journal entry
             if rec.fs_number and rec.machine_code:
@@ -279,42 +284,55 @@ class AdvancePayment(models.Model):
                 if not rec.advance_payment_line_ids:
                     raise ValidationError(_("No bank lines provided when multiple banks are enabled."))
 
+                total_debit = 0.0
+                total_credit = 0.0
+
                 # Bank lines
                 for line in rec.advance_payment_line_ids:
+                    line_amount = float_round(line.amount, precision_digits=currency_precision)
                     move_lines.append((0, 0, {
                         'account_id': bank_account_id,
                         'partner_id': rec.partner_id.id,
                         'name': rec.ft,
-                        'debit': line.amount if rec.advance_type == 'receive' else 0.0,
-                        'credit': 0.0 if rec.advance_type == 'receive' else line.amount,
+                        'debit': line_amount if rec.advance_type == 'receive' else 0.0,
+                        'credit': 0.0 if rec.advance_type == 'receive' else line_amount,
                         'currency_id': rec.currency_id.id,
                         'company_id': rec.company_id.id,
                     }))
+                    total_debit += line_amount if rec.advance_type == 'receive' else 0.0
+                    total_credit += line_amount if rec.advance_type == 'outbound' else 0.0
 
-             
+                
+                partner_amount = float_round(rec.amount, precision_digits=currency_precision)
                 if rec.advance_type == 'receive':
                     move_lines.append((0, 0, {
                         'account_id': partner_account_id,
                         'partner_id': rec.partner_id.id,
                         'name': rec.description,
                         'debit': 0.0,
-                        'credit': rec.amount,
+                        'credit': partner_amount,
                         'currency_id': rec.currency_id.id,
                         'company_id': rec.company_id.id,
                     }))
+                    total_credit += partner_amount
                 else:
                     move_lines.append((0, 0, {
                         'account_id': partner_account_id,
                         'partner_id': rec.partner_id.id,
                         'name': rec.description,
-                        'debit': rec.amount,
+                        'debit': partner_amount,
                         'credit': 0.0,
                         'currency_id': rec.currency_id.id,
                         'company_id': rec.company_id.id,
                     }))
+                    total_debit += partner_amount
 
+                # Regular taxes (non-intercompany)
                 for tax in rec.tax_ids:
-                    tax_amount = (rec.amount * tax.amount / 100.0 if tax.amount_type == 'percent' else tax.amount)
+                    tax_amount = float_round(
+                        (rec.amount * tax.amount / 100.0 if tax.amount_type == 'percent' else tax.amount),
+                        precision_digits=currency_precision
+                    )
                     if tax_amount == 0:
                         continue
                     repartition_line = tax.invoice_repartition_line_ids.filtered(lambda l: l.repartition_type == 'tax')[:1]
@@ -329,65 +347,92 @@ class AdvancePayment(models.Model):
                             'currency_id': rec.currency_id.id,
                             'company_id': rec.company_id.id,
                         }))
+                        total_debit += 0.0 if tax.amount >= 0 else abs(tax_amount)
+                        total_credit += tax_amount if tax.amount >= 0 else 0.0
                     else:
                         move_lines.append((0, 0, {
                             'account_id': repartition_line.account_id.id,
-                            
                             'name': f"Tax - {tax.name}",
                             'debit': tax_amount if tax.amount >= 0 else 0.0,
                             'credit': 0.0 if tax.amount >= 0 else abs(tax_amount),
                             'currency_id': rec.currency_id.id,
                             'company_id': rec.company_id.id,
                         }))
+                        total_debit += tax_amount if tax.amount >= 0 else 0.0
+                        total_credit += 0.0 if tax.amount >= 0 else abs(tax_amount)
+
+                # Adjust the partner line to balance the entry
+                diff = float_round(total_debit - total_credit, precision_digits=currency_precision)
+                if diff != 0:
+                    for line in move_lines:
+                        if line[2]['account_id'] == partner_account_id:
+                            if rec.advance_type == 'receive':
+                                line[2]['credit'] = float_round(line[2]['credit'] + diff, precision_digits=currency_precision)
+                            else:
+                                line[2]['debit'] = float_round(line[2]['debit'] + diff, precision_digits=currency_precision)
+                            break
 
             else:
+                # Single bank line case
                
+                net_amount = float_round(rec.net_amount, precision_digits=currency_precision)
+                partner_amount = float_round(rec.amount, precision_digits=currency_precision)
+
+                total_debit = 0.0
+                total_credit = 0.0
 
                 if rec.advance_type == 'receive':
                     move_lines.append((0, 0, {
                         'account_id': bank_account_id,
                         'partner_id': rec.partner_id.id,
                         'name': rec.description,
-                        'debit': rec.net_amount,
+                        'debit': net_amount,
                         'credit': 0.0,
                         'currency_id': rec.currency_id.id,
                         'company_id': rec.company_id.id,
                     }))
+                    total_debit += net_amount
                     move_lines.append((0, 0, {
                         'account_id': partner_account_id,
                         'partner_id': rec.partner_id.id,
                         'name': rec.description,
                         'debit': 0.0,
-                        'credit': rec.amount ,
+                        'credit': partner_amount,
                         'currency_id': rec.currency_id.id,
                         'company_id': rec.company_id.id,
                     }))
+                    total_credit += partner_amount
                 else:
                     move_lines.append((0, 0, {
                         'account_id': partner_account_id,
                         'partner_id': rec.partner_id.id,
                         'name': rec.description,
-                        'debit': rec.amount ,
+                        'debit': partner_amount,
                         'credit': 0.0,
                         'currency_id': rec.currency_id.id,
                         'company_id': rec.company_id.id,
                     }))
+                    total_debit += partner_amount
                     move_lines.append((0, 0, {
                         'account_id': bank_account_id,
                         'partner_id': rec.partner_id.id,
                         'name': rec.description,
                         'debit': 0.0,
-                        'credit': rec.net_amount,
+                        'credit': net_amount,
                         'currency_id': rec.currency_id.id,
                         'company_id': rec.company_id.id,
                     }))
+                    total_credit += net_amount
 
+                # Regular taxes (non-intercompany)
                 for tax in rec.tax_ids:
-                    tax_amount = (rec.amount * tax.amount / 100.0 if tax.amount_type == 'percent' else tax.amount)
+                    tax_amount = float_round(
+                        (rec.amount * tax.amount / 100.0 if tax.amount_type == 'percent' else tax.amount),
+                        precision_digits=currency_precision
+                    )
                     if tax_amount == 0:
                         continue
                     repartition_line = tax.invoice_repartition_line_ids.filtered(lambda l: l.repartition_type == 'tax')[:1]
-                    
                     if not repartition_line or not repartition_line.account_id:
                         raise ValidationError(_("No valid account found in invoice repartition lines for tax '%s'") % tax.name)
                     if rec.advance_type == 'receive':
@@ -399,6 +444,8 @@ class AdvancePayment(models.Model):
                             'currency_id': rec.currency_id.id,
                             'company_id': rec.company_id.id,
                         }))
+                        total_debit += 0.0 if tax.amount >= 0 else abs(tax_amount)
+                        total_credit += tax_amount if tax.amount >= 0 else 0.0
                     else:
                         move_lines.append((0, 0, {
                             'account_id': repartition_line.account_id.id,
@@ -408,6 +455,19 @@ class AdvancePayment(models.Model):
                             'currency_id': rec.currency_id.id,
                             'company_id': rec.company_id.id,
                         }))
+                        total_debit += tax_amount if tax.amount >= 0 else 0.0
+                        total_credit += 0.0 if tax.amount >= 0 else abs(tax_amount)
+
+                # Adjust the partner line to balance the entry
+                diff = float_round(total_debit - total_credit, precision_digits=currency_precision)
+                if diff != 0:
+                    for line in move_lines:
+                        if line[2]['account_id'] == partner_account_id:
+                            if rec.advance_type == 'receive':
+                                line[2]['credit'] = float_round(line[2]['credit'] + diff, precision_digits=currency_precision)
+                            else:
+                                line[2]['debit'] = float_round(line[2]['debit'] + diff, precision_digits=currency_precision)
+                            break
 
             move = self.env['account.move'].sudo().create({
                 'ref': ref,
@@ -418,12 +478,12 @@ class AdvancePayment(models.Model):
                 'move_type': 'entry',
                 'line_ids': move_lines,
                 'company_id': rec.company_id.id,
-                'payment_code':rec.payment_code,
-                'cheque_no':rec.cheque_no,
-                'cpo_no':rec.cpo_no,
-                'description':rec.description,
-                'pay_to':rec.pay_to
-                
+                'tin_id': rec.tin_id.id,
+                'payment_code': rec.payment_code,
+                'cheque_no': rec.cheque_no,
+                'cpo_no': rec.cpo_no,
+                'description': rec.description,
+                'pay_to': rec.pay_to
             })
 
             rec.write({'move_id': move.id})

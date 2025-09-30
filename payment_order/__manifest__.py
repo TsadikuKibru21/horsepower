@@ -11,7 +11,8 @@
         'views/account_move_template.xml',
         'views/machine_code.xml',
       
-        'data/sequence.xml'
+        'data/sequence.xml',
+        'report/payment.xml'
     ],
     'installable': True,
     'application': False,

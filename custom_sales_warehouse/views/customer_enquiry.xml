@@ -23,4 +23,49 @@
             </xpath>
         </field>
     </record>
+
+    <record id="view_customer_enquiry_tree" model="ir.ui.view">
+        <field name="name">customer.enquiry.tree</field>
+        <field name="model">customer.enquiry</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                 <field name="quantity"/>
+                 <field name="date"/>
+                <field name="salesperson_id"/>
+                
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_customer_enquiry_form" model="ir.ui.view">
+        <field name="name">customer.enquiry.form</field>
+        <field name="model">customer.enquiry</field>
+        <field name="arch" type="xml">
+            <form string="Customer Enquiry Report">
+            <sheet>
+                <group>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="optional_product"/>
+                </group>
+                <group>
+                    <field name="date"/>
+                <field name="salesperson_id"/>
+                </group>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_customer_enquiry" model="ir.actions.act_window">
+        <field name="name">Customer Enquiry</field>
+        <field name="res_model">customer.enquiry</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_customer_enquiry_view" name="Customer Enquiry"
+          parent="sale.menu_sale_report" sequence="5"
+          action="action_customer_enquiry"/>
 </odoo>
