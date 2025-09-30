@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- QWeb Report Template -->
+    <template id="report_purchase_request">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 style="text-align:center;">Purchase Request</h2>
+
+                        <!-- Header Info -->
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <strong>Reference:</strong>
+                                <span t-field="o.name"/>
+                            </div>
+                           
+
+                            <div class="col-6">
+                                <strong>Date:</strong>
+                                <span t-field="o.effective_date"/>
+                            </div>
+                        </div>
+
+                        <!-- Request Lines -->
+                        <h4 class="mt-4">Request Lines</h4>
+                        <table class="table table-sm table-bordered mt-2">
+                            <thead>
+                                <tr>
+                                    <th>Vendor</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>UoM</th>
+                                    <th>Unit Price</th>
+                                    <th>Total</th>
+                                    <th>Remark</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.request_lines" t-as="line">
+                                    <tr>
+                                        <td><span t-field="line.vendor"/></td>
+                                        <td><span t-field="line.product_id"/></td>
+                                        <td class="text-end"><span t-field="line.quantity"/></td>
+                                        <td><span t-field="line.uom_id"/></td>
+                                        <td class="text-end">
+                                            <span t-field="line.unit_price"
+                                                  />
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-field="line.subtotal"
+                                                  />
+                                        </td>
+                                        <td><span t-field="line.remark"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Footer Signatures -->
+                        <div class="row mt-5">
+                            <div class="col-4 text-center">
+                                <p><strong>Prepared By</strong></p>
+                                <p t-field="o.prepared_by"/>
+                                <p><span t-field="o.prepared_date"/></p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p><strong>Checked By</strong></p>
+                                <p t-field="o.checked_by"/>
+                                <p><span t-field="o.checked_date"/></p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p><strong>Approved By</strong></p>
+                                <p t-field="o.approved_by"/>
+                                <p><span t-field="o.approved_date"/></p>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Report Action -->
+    <record id="action_report_purchase_request" model="ir.actions.report">
+        <field name="name">Purchase Request</field>
+        <field name="model">purchase.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">store_request.report_purchase_request</field>
+        <field name="report_file">store_request.report_purchase_request</field>
+        <field name="binding_model_id" ref="model_purchase_request"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Purchase Request - %s' % (object.name)</field>
+    </record>
+</odoo>

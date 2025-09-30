@@ -5,7 +5,7 @@ _logger = logging.getLogger(__name__)
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
-    sales_from_id = fields.Many2many('sales.from', string='Sales From')
+    
     team = fields.Selection(
         selection=[
             ('direct_sales', 'Direct Sales'),
@@ -97,6 +97,7 @@ class SaleOrder(models.Model):
                 qty_needed = line.product_uom_qty
                 qty_remaining = qty_needed
                 warehouse = order.warehouse_id
+                partner_id=line.sales_from_id.partner_id
 
               
 
@@ -168,6 +169,7 @@ class SaleOrder(models.Model):
                     purchase_request_lines.append((0, 0, {
                         'product_id': product.id,
                         'quantity': qty_remaining,
+                        'vendor':partner_id.id
                     }))
 
             # Create a single purchase request for the order if needed

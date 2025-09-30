@@ -6,6 +6,7 @@ class PurchaseRequest(models.Model):
     _name = 'purchase.request'
     _description = 'Purchase Request'
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'create_date desc'
 
     name = fields.Char(string='Name', required=True, copy=False, default=lambda self: _('New'), readonly=True)
     effective_date = fields.Date(string='Date', required=True, default=fields.Date.today())

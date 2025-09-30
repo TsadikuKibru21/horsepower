@@ -11,6 +11,7 @@
         'data/data.xml',
        
         'views/purchase_order.xml',
+        'report/purchase_request.xml',
       
      
     ],

@@ -8,3 +8,4 @@ class SalesFrom(models.Model):
     product=fields.Char(string="Product")
     reference=fields.Char(string="Reference")
     quantity=fields.Float(string="Quantity")
+    partner_id=fields.Many2one('res.partner',string="Location")

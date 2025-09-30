@@ -40,6 +40,6 @@
 
 
 <menuitem id="menu_customer_enquiry_report" name="Customer Enquiry Report"
-          parent="sale.menu_sale_report"
+          parent="sale.menu_sale_report" sequence="7"
           action="action_customer_enquiry_report"/>
 </odoo>

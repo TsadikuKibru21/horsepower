@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- QWeb Report Template -->
+    <template id="report_advance_payment">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 style="text-align:center">Payment</h2>
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <strong>Reference:</strong> <span t-field="o.name"/>
+                            </div>
+                            
+                             <div class="col-6">
+                                <strong>Date:</strong> <span t-field="o.date"/>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <strong>Partner:</strong> <span t-field="o.partner_id"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Type:</strong> <span t-field="o.advance_type"/>
+                            </div>
+                           
+                        </div>
+                        <div class="row mt-2">
+                      
+                            <div class="col-6">
+                                <strong>Journal:</strong> <span t-field="o.journal_id"/>
+                            </div>
+                            
+                         
+                        </div>
+                        
+                        <div class="row mt-2">
+                           
+                            <t t-if="o.advance_type == 'receive'">
+                                <div class="col-6">
+                                    <strong>FS Number:</strong> <span t-field="o.fs_number"/>
+                                </div>
+                            </t>
+                             <div class="col-6">
+                                <strong>FT:</strong> <span t-field="o.ft"/>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <t t-if="o.advance_type == 'receive'">
+                                <div class="col-6">
+                                    <strong>Machine Code:</strong> <span t-field="o.machine_code"/>
+                                </div>
+                            </t>
+                        </div>
+                        <!-- Summary Section: Untaxed Amount, Taxes, Total Amount (Right-Aligned) -->
+                        <div class="row mt-4">
+                            <div class="col-6 offset-6"> <!-- Pushes to right side -->
+                                <div class="d-flex justify-content-between">
+                                    <strong>B. VAT Amount:</strong>
+                                    <span t-field="o.amount" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                </div>
+                                <t t-foreach="o.tax_ids" t-as="tax">
+                                    <div class="d-flex justify-content-between">
+                                        <strong t-esc="tax.name"/>
+                                        <span t-esc="(o.amount * tax.amount / 100.0)" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </div>
+                                </t>
+                                <div class="d-flex justify-content-between mt-2" style="border-top: 1px solid #000; padding-top: 5px;">
+                                    <strong>Total Amount:</strong>
+                                    <span t-field="o.net_amount" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Report Action -->
+    <record id="action_report_advance_payment" model="ir.actions.report">
+        <field name="name">Payment Report</field>
+        <field name="model">advance.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">payment_order.report_advance_payment</field>
+        <field name="binding_model_id" ref="model_advance_payment"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

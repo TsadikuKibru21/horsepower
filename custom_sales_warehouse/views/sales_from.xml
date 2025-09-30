@@ -10,6 +10,7 @@
                 <field name="product"/>
                 <field name="reference"/>
                 <field name="quantity"/>
+                <field name="partner_id"/>
             </tree>
         </field>
     </record>
@@ -24,6 +25,8 @@
                     <group>
                         <field name="name"/>
                         <field name="product"/>
+                        <field name="partner_id"/>
+                        
                     </group>
                     <group>
                         <field name="reference"/>
