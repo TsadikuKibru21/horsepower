@@ -4,3 +4,7 @@ from . import customer_enquiry
 from . import customer_enquiry_report
 
 from . import sale_order_line
+
+from . import product
+from . import purchase_order
+from . import account_move

@@ -1,8 +1,45 @@
 <odoo>
     <template id="report_invoice_document_inherit_signatures" inherit_id="account.report_invoice_document">
         
+        <xpath expr="//table[@class='table table-sm o_main_table table-borderless']/thead/tr/th[@name='th_description']" position="before">
+                <th class="text-start">No</th>
+            </xpath>
+
+            <xpath expr="//table[@class='table table-sm o_main_table table-borderless']/tbody//td[@name='account_invoice_line_name']" position="before">
+                <td class="text-start">
+                    <span t-field="line.order_sequence"/>
+                </td>
+            </xpath>
+
+            <xpath expr="//table[@class='table table-sm o_main_table table-borderless']/thead/tr/th[@name='th_description']" position="after">
+                <th class="text-start">Item Code</th>
+            </xpath>
+
+        
+        <xpath expr="//table[@class='table table-sm o_main_table table-borderless']/tbody//td[@name='account_invoice_line_name']" position="after">
+            <td class="text-start">
+                <span t-field="line.default_code"/>
+            </td>
+        </xpath>
+
+        <xpath expr="//table[@class='table table-sm o_main_table table-borderless']/thead/tr/th[@name='th_description']" position="replace">
+                <th class="text-start">Product</th>
+            </xpath>
+
+        <xpath expr="//table[@class='table table-sm o_main_table table-borderless']/tbody//td[@name='account_invoice_line_name']" position="replace">
+                <td class="text-start">
+                    <span t-field="line.product_id.name"/>
+                </td>
+            </xpath>
+
+        <xpath expr="//table[@class='table table-sm o_main_table table-borderless']/thead/tr/th[@name='th_taxes']" position="replace"/>
+               
+
+        <xpath expr="//table[@class='table table-sm o_main_table table-borderless']/tbody//td[@name='td_taxes']" position="replace"/>
+               
+
         <!-- Add Ordered By, Invoice Created By, Confirmed By at the end -->
-        <xpath expr="//div[@id='payment_term']" position="after">
+         <xpath expr="//div[hasclass('clearfix')]" position="after">
             <div class="mt-5">
                 <table class="table table-sm table-borderless" style="width:100%;">
                     <tr>

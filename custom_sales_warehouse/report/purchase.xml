@@ -2,26 +2,16 @@
 <odoo>
     <data>
         <!-- Inherit Sale Order Report Template -->
-        <template id="report_saleorder_document_inherit_sales_from" inherit_id="sale.report_saleorder_document">
+        <template id="report_purchase_document_inherit" inherit_id="purchase.report_purchaseorder_document">
            
 
-            <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/thead//th[descendant::span[text()='Amount']]" position="replace">
-                <th name="th_amount_total" class="text-end">
-                    <span>Amount Total</span>
-                </th>
-            </xpath>
-          
-             <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/tbody//td[@name='td_subtotal' and not(ancestor::tr/@class='is-subtotal')]" position="replace">
-                <td name="td_amount_total" class="text-end">
-                    <span t-out="line.price_total" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
-                </td>
-            </xpath>
+         
             <!-- Add total row for amount_total after the last line -->
             <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/thead/tr/th[@name='th_description']" position="before">
                 <th class="text-start">No</th>
             </xpath>
 
-            <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/tbody//td[@name='td_name']" position="before">
+            <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/tbody//td[@id='product']" position="before">
                 <td class="text-start">
                     <span t-field="line.order_sequence"/>
                 </td>
@@ -32,7 +22,7 @@
             </xpath>
 
         
-        <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/tbody//td[@name='td_name']" position="after">
+        <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/tbody//td[@id='product']" position="after">
             <td class="text-start">
                 <span t-field="line.default_code"/>
             </td>
@@ -42,7 +32,7 @@
                 <th class="text-start">Product</th>
             </xpath>
 
-        <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/tbody//td[@name='td_name']" position="replace">
+        <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/tbody//td[@id='product']" position="replace">
                 <td class="text-start">
                     <span t-field="line.product_id.name"/>
                 </td>
