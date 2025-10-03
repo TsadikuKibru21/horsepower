@@ -20,7 +20,7 @@
 #
 #############################################################################
 {
-    'name': 'Hide Any Menu User Wise',
+    'name': 'HorsePower Hide Any Menu User Wise',
     'version': '17.0.1.0.0',
     'category': 'Extra Tools',
     'summary': 'Hide Menu, Odoo17 Hide Menu, Hide Menu Odoo, Restrict Menu Items, Odoo17 Menu, Odoo17, Odoo Apps',

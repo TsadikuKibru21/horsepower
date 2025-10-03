@@ -1,9 +1,9 @@
 {
-    'name': 'Payment Order',
+    'name': 'HorsePower Payment Order',
     'version': '1.0',
     'category': 'Accounting',
     'summary': 'Custom module for Payment Order and Cheque Payment Voucher',
-    'depends': ['base', 'account','mail'],
+    'depends': ['base', 'account','mail','customer_is_vendor'],
     'data': [
         'security/groups.xml',
         'security/ir.model.access.csv',

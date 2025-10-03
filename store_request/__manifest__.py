@@ -1,5 +1,5 @@
 {
-    'name': 'Purchase Request',
+    'name': 'HorsePower Purchase Request',
     'version': '17.0',
     'summary': 'Manage store and purchase requests',
     'description': 'A module to handle store and purchase requests in Odoo',
