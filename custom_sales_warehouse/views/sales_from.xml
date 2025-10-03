@@ -7,10 +7,12 @@
         <field name="arch" type="xml">
             <tree editable="bottom">
                 <field name="name"/>
+                <field name="partner_id"/>
+                 
                 <field name="product"/>
                 <field name="reference"/>
                 <field name="quantity"/>
-                <field name="partner_id"/>
+                
             </tree>
         </field>
     </record>

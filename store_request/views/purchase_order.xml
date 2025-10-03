@@ -34,13 +34,15 @@
                         </div>
                         <group>
                             <group>
-                                <field name="effective_date" readonly="state == 'approved'"/>
+                                <field name="effective_date" readonly="1"/>
+                                 
+                                
                             </group>
                            
                         </group>
                         <notebook>
                             <page name="request_lines" string="Request Lines">
-                                <field name="request_lines" readonly="state == 'approved'">
+                                <field name="request_lines" readonly="state != 'draft'">
                                     <tree editable="bottom">
                                         <field name="vendor"/>
                                         <field name="product_id" readonly="parent.state not in  ['draft']"/>
@@ -50,7 +52,7 @@
                                         <field name="uom_id" readonly="parent.state not in  ['draft']"/>
 
                                         <field name="unit_price" readonly="parent.state not in  ['draft']" />
-                                        <field name="subtotal" string="Total Price" sum="Total Cost"/>
+                                        <field name="subtotal" string="Total Price( B. VAT)" sum="Total Cost"/>
                                         <field name="remark"/>
                                     </tree>
                                 </field>

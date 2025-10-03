@@ -21,6 +21,7 @@
         'views/stock_warehouse.xml',
         'views/res_partner.xml',
         'views/account_move.xml',
+        'views/purchase_request.xml',
         'report/reports.xml',
         'report/sale_order.xml',
         'report/invoice.xml',

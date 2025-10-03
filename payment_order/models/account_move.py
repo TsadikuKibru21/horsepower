@@ -14,4 +14,18 @@ class AccountMove(models.Model):
     ], string='Invoice Type', default=False)
 
     
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+
+    sale_type = fields.Selection([
+        ('credit_sales', 'Credit Sales'),
+        ('cash_sales', 'Cash Sales'),
+    ], string='Sale Type', default=False)
     
+    def _prepare_invoice(self):
+        """Extend to pass sale_type to invoice_type"""
+        invoice_vals = super(SaleOrder, self)._prepare_invoice()
+        invoice_vals.update({
+            'invoice_type': self.sale_type or False,
+        })
+        return invoice_vals
