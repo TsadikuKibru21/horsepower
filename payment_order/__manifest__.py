@@ -10,6 +10,7 @@
         'views/payment_order.xml',
         'views/account_move_template.xml',
         'views/machine_code.xml',
+        'views/sale_order.xml',
       
         'data/sequence.xml',
         'report/payment.xml'

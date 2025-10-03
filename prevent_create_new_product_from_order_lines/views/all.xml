@@ -1,0 +1,66 @@
+<odoo>
+
+    <!-- Sale Order Line -->
+    <record id="view_order_form_inherit_no_product_create" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.no.product.create</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_template_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Purchase Order Line -->
+    <record id="view_purchase_order_form_inherit_no_product_create" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.no.product.create</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inventory Move Line -->
+    <record id="view_picking_form_inherit_no_product_create" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.no.product.create</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Vendor Bill (Account Move Lines) -->
+    <record id="view_vendor_bill_form_inherit_no_product_create" model="ir.ui.view">
+        <field name="name">account.move.form.vendor.bill.no.product.create</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Customer Invoice (same form as vendor bill) -->
+    <record id="view_customer_invoice_form_inherit_no_product_create" model="ir.ui.view">
+        <field name="name">account.move.form.customer.invoice.no.product.create</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

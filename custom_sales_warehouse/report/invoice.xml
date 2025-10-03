@@ -18,7 +18,7 @@
         
         <xpath expr="//table[@class='table table-sm o_main_table table-borderless']/tbody//td[@name='account_invoice_line_name']" position="before">
             <td class="text-start">
-                <span t-field="line.default_code"/>
+                <span t-field="line.default_code.default_code"/>
             </td>
         </xpath>
 

@@ -73,11 +73,20 @@
                         <field name="order_sequence" readonly="state in ['sale','done']"/>
             </xpath>
 
-            
+             <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="before">
+                        <field name="default_code" readonly="state in ['sale','done']"/>
+            </xpath>
 
-            <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="after">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
                         <field name="sales_from_id" readonly="state in ['sale','done']"/>
             </xpath>
+
+              <xpath expr="//field[@name='order_line']" position="attributes">
+                        <attribute name="readonly">state in ['purchase','done']</attribute>
+                </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="attributes">
+                        <attribute name="readonly">1</attribute>
+                </xpath>
 
          
             

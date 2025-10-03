@@ -51,12 +51,12 @@
                     <group>
                         <field name="name" readonly="1"/>
                         
-                        <field name="advance_type" readonly="1"/>
+                        <field name="advance_type"  invisible="1" readonly="1"/>
                         
                         <field name="tin_id" required="0" domain="[('partner_id.is_vendor','=', True)] if advance_type == 'send' else [('partner_id.is_customer','=', True)]" options="{'no_create': True}" readonly="state == 'validated'"/>
                         <field name="partner_id" required="1" domain="[('is_vendor','=', True)] if advance_type == 'send' else [('is_customer','=', True)]" options="{'no_create': True}" readonly="state == 'validated'"/>
 
-                        <field name="use_previous_fs" invisible="advance_type == 'send'" readonly="state in ['draft','validated']"/>
+                        <field name="use_previous_fs" invisible="1" readonly="state in ['draft','validated']"/>
                         <field name="fs_number" invisible="advance_type == 'send'" domain="[(('partner_id', '=', partner_id))] if use_previous_fs else [('id', '=', False)]" readonly="state in ['draft','validated']"/>
                         <field name="machine_code" invisible="advance_type == 'send'" options="{'no_create': True}" readonly="state in ['draft','validated']"/>
 
@@ -82,7 +82,7 @@
                         <field name="cheque_no" invisible="payment_code != 'cheque'" readonly="state == 'validated'"/>
 
                         <field name="cpo_no" invisible="payment_code != 'cpo'" readonly="state == 'validated'"/>
-                        <field name="agent_id" domain="[('share', '=', True)]" invisible="advance_type == 'send'" readonly="state == 'validated'"/>
+                        <field name="agent_id" domain="[('share', '=', True)]" invisible="1" readonly="state == 'validated'"/>
                         <field name="company_id" invisible="1" readonly="1"/>
                             
                         
@@ -126,7 +126,7 @@
   
        
 
-        <menuitem id="account.menu_action_account_payments_receivable" name="Receipt" parent="account.menu_finance_receivables" groups="payment_order.group_advance_payable_submit,payment_order.group_advance_payable_validate" action="action_advance_payment_receivable"/>
-        <menuitem id="account.menu_action_account_payments_payable" name="Payment" parent="account.menu_finance_payables" groups="payment_order.group_advance_payable_submit,payment_order.group_advance_payable_validate" action="action_advance_payment_payable"/>
+        <menuitem id="menu_action_advance_payments_receivable" name="Receipt" parent="account.menu_finance_receivables" groups="payment_order.group_advance_payable_submit,payment_order.group_advance_payable_validate" action="action_advance_payment_receivable"/>
+        <menuitem id="menu_action_advance_payments_payable" name="Payment" parent="account.menu_finance_payables" groups="payment_order.group_advance_payable_submit,payment_order.group_advance_payable_validate" action="action_advance_payment_payable"/>
 
 </odoo>

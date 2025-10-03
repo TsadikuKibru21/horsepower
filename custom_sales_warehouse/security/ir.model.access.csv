@@ -5,3 +5,5 @@ access_sales_from,access_sales_from,model_sales_from,,1,1,1,1
 access_customer_enquiry,access_customer_enquiry,model_customer_enquiry,,1,1,1,1
 access_customer_enquiry_report,access_customer_enquiry_report,model_customer_enquiry_report,,1,1,1,1
 
+
+access_product_item_code,product.item.code,model_product_item_code,,1,1,1,1

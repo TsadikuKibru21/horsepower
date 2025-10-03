@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 class PurchaseRequest(models.Model):
     _inherit='purchase.request'
 
-    sale_order=fields.Many2one('sale.order')
+    sale_order=fields.Many2one('sale.order',string="Request From")
 
 
   
