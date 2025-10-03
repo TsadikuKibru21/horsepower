@@ -111,7 +111,17 @@ class AdvancePayment(models.Model):
     ], default='cash',track_visibility='always')
     cheque_no=fields.Char(string='Cheque No')
     cpo_no=fields.Char(string='CPO No')
-   
+    tin_id = fields.Many2one('partner.tin', string="TIN")
+    
+    @api.onchange('tin_id')
+    def _onchange_tin_id(self):
+        if self.tin_id:
+            self.partner_id = self.tin_id.partner_id
+            
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        if self.partner_id:
+            self.tin_id = self.partner_id.tin_id
             
    
     

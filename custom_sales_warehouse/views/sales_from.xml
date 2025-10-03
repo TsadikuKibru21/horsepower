@@ -5,7 +5,7 @@
         <field name="name">sales.from.tree</field>
         <field name="model">sales.from</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree editable="bottom">
                 <field name="name"/>
                 <field name="product"/>
                 <field name="reference"/>
@@ -15,7 +15,7 @@
         </field>
     </record>
 
-    <record id="view_sales_from_form" model="ir.ui.view">
+    <!-- <record id="view_sales_from_form" model="ir.ui.view">
         <field name="name">sales.from.form</field>
         <field name="model">sales.from</field>
         <field name="arch" type="xml">
@@ -36,12 +36,12 @@
                 </sheet>
             </form>
         </field>
-    </record>
+    </record> -->
 
      <record id="action_sales_from" model="ir.actions.act_window">
             <field name="name">Sales From</field>
             <field name="res_model">sales.from</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree</field>
         </record>
    <menuitem
         id="menu_sales_from"

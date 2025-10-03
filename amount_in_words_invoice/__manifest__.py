@@ -21,7 +21,7 @@
 #
 ###############################################################################
 {
-    'name': "Amount In Words In Invoice, Sale Order And Purchase Order",
+    'name': "HorsePower Amount In Words In Invoice, Sale Order And Purchase Order",
     'version': '17.0.1.0.0',
     'category': 'Accounting',
     'summary': """Showing the subtotal amounts of invoice, sale order 

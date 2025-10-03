@@ -1,7 +1,7 @@
 {
     'name': "Custom Sales Warehouse",
     'version': '1.0',
-    'summary': 'Custom module for sales teams with warehouse pull and purchase order automation',
+    'summary': 'HorsePower for sales teams with warehouse pull and purchase order automation',
     'description': """
         Custom Odoo 17 module to manage two sales teams (Direct Sales and Estimated Tender) with separate approvers,
         and automate warehouse pull operations or purchase order creation based on product availability.
