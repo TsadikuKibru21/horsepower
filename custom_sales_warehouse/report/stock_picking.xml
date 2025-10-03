@@ -1,0 +1,28 @@
+<odoo>
+    <template id="report_deliveryslip_document_inherit_signature" inherit_id="stock.report_delivery_document">
+
+      <xpath expr="//div[@class='page']" position="inside">
+            <div class="row mt48">
+                <table class="table table-borderless" style="width:100%; margin-top:50px;">
+                    <tr>
+                        <td style="width:33%; text-align:center;">
+                            <strong>Prepared By</strong>
+                            <br/><br/><br/>
+                            ______________________
+                        </td>
+                        <td style="width:33%; text-align:center;">
+                            <strong>Approved By</strong>
+                            <br/><br/><br/>
+                            ______________________
+                        </td>
+                        <td style="width:33%; text-align:center;">
+                            <strong>Received By</strong>
+                            <br/><br/><br/>
+                            ______________________
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </xpath>
+    </template>
+</odoo>

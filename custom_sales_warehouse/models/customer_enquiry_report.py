@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api,_
 from odoo.http import request
 import io
 import xlsxwriter
@@ -9,12 +9,24 @@ from odoo.tools import date_utils
 class CustomerEnquiryWizard(models.Model):
     _name = 'customer.enquiry.report'
     _description = 'Customer Enquiry Report Wizard'
+    name = fields.Char(string="Reference", copy=False, readonly=True,default=lambda self: _('New'))
 
     start_date = fields.Date(string='Start Date')
     end_date = fields.Date(string='End Date')
     file_data = fields.Binary('File')
     file_name = fields.Char('File Name')
 
+    
+    @api.model
+    def create(self, vals):
+        # Call the super method to create the advance.payment record
+        record = super(CustomerEnquiryWizard, self).create(vals)
+        # if 'name' not in vals or vals['name'] == '/':
+        if not record.name or record.name == '/' or record.name =="New":
+           record.name = self.env['ir.sequence'].next_by_code('customer.enquiry.report')
+        
+       
+        return record
     def action_generate_report(self):
         output = io.BytesIO()
         output = io.BytesIO()
@@ -37,7 +49,7 @@ class CustomerEnquiryWizard(models.Model):
         sheet.merge_range('A1:E1', 'Customer Enquiry Report', title_style)
 
         # Headers
-        headers = ['Customer', 'Product', 'Optional Product', 'Quantity','Date', 'Salesperson']
+        headers = ['Date','Customer', 'Product', 'Contact', 'Quotation Status']
         for col, header in enumerate(headers):
             sheet.write(2, col, header, header_style)
 
@@ -51,12 +63,12 @@ class CustomerEnquiryWizard(models.Model):
         enquiries = self.env['customer.enquiry'].search(domain)
         row = 3
         for enquiry in enquiries:
-            sheet.write(row, 0, enquiry.partner_id.name or '', text_style)
-            sheet.write(row, 1, enquiry.product_id.name or '', text_style)
-            sheet.write(row, 2, enquiry.optional_product or '', text_style)
-            sheet.write(row, 3, enquiry.quantity or '', text_style)
-            sheet.write(row, 4, enquiry.date, date_style)
-            sheet.write(row, 5, enquiry.salesperson_id.name or '', text_style)
+            sheet.write(row, 0, enquiry.date, date_style)
+            sheet.write(row, 1, enquiry.partner_id.name or '', text_style)
+            sheet.write(row, 2, enquiry.product_id.name or '', text_style)
+            sheet.write(row, 3, enquiry.contact or '', text_style)
+            sheet.write(row, 4, enquiry.quotation_status or '', text_style)
+           
             row += 1
 
         workbook.close()

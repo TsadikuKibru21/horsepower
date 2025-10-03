@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <odoo>
+
+  <data noupdate="1">
+         <record id="customer_enquiry_report_sequence" model="ir.sequence">
+            <field name="name">customer enquiry report Sequence</field>
+            <field name="code">customer.enquiry.report</field>
+            <field name="prefix">CER/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
 <record id="view_customer_enquiry_report_tree" model="ir.ui.view">
     <field name="name">customer.enquiry.report.tree</field>
     <field name="model">customer.enquiry.report</field>
     <field name="arch" type="xml">
         <tree>
+            <field name="name"/>
             <field name="start_date"/>
             <field name="end_date"/>
         </tree>
@@ -19,6 +30,7 @@
         <form string="Customer Enquiry Report">
         <sheet>
             <group>
+              <field name="name"/>
                 <field name="start_date"/>
                 <field name="end_date"/>
             </group>

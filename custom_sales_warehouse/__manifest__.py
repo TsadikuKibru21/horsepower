@@ -26,6 +26,7 @@
         'report/sale_order.xml',
         'report/invoice.xml',
         'report/purchase.xml',
+        'report/stock_picking.xml',
     ],
     'installable': True,
     'application': False,
