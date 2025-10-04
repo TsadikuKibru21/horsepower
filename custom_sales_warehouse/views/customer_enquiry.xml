@@ -17,8 +17,8 @@
                         <tree editable="bottom">
                              <field name="date"/>
                             <field name="product_id"/>
-                            <field name="optional_product"/>
-                            <field name="quantity"/>
+                            <field name="contact"/>
+                            
 
                             <field name="quotation_status"/>
                             
@@ -40,8 +40,9 @@
             
                  <field name="date"/>
                 <field name="partner_id"/>
+                <field name="contact"/>
                 <field name="product_id"/>
-                 <field name="quantity"/>
+                 
                  <field name="quotation_status"/>
                 <field name="salesperson_id" readonly="1"/>
                
@@ -59,11 +60,14 @@
                 <group>
                     <field name="date"/>
                     <field name="partner_id"/>
-                    <field name="product_id"/>
+
+                     <field name="contact"/>
+                    
                     
                 </group>
                 <group>
-                    <field name="optional_product"/>
+                <field name="product_id"/>
+                   
                     <field name="quotation_status"/>
                     <field name="salesperson_id" readonly="1"/>
 

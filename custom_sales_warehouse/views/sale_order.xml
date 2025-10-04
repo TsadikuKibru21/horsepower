@@ -88,6 +88,9 @@
                         <attribute name="readonly">1</attribute>
                 </xpath>
 
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="team" readonly="1"/>
+            </xpath>
          
             
           

@@ -7,11 +7,16 @@
         <field name="arch" type="xml">
 
 
-            <xpath expr="//field[@name='company_id']" position="after">
+          
 
-                    <field name="quotation_description" readonly="state in ['sale','done']"/>
-
-
+             <xpath expr="//page[@name='other_information']" position="before">
+                <page string="Quotation Follow-up" name="quotation_followup">
+                    <group>
+                        <field name="quotation_description"/>
+                        <field name="last_followup_date"/>
+                        <field name="source_id"/>
+                    </group>
+                </page>
             </xpath>
 
 
