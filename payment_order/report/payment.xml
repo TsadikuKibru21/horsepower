@@ -11,24 +11,37 @@
                             <div class="col-6">
                                 <strong>Reference:</strong> <span t-field="o.name"/>
                             </div>
+                             <div class="col-6">
+                                <strong>Partner:</strong> <span t-field="o.partner_id"/>
+                            </div>
                             
+                        </div>
+                        <div class="row mt-2">
+                           
                              <div class="col-6">
                                 <strong>Date:</strong> <span t-field="o.date"/>
                             </div>
-                        </div>
-                        <div class="row mt-2">
                             <div class="col-6">
-                                <strong>Partner:</strong> <span t-field="o.partner_id"/>
+                                <strong>Description:</strong> <span t-field="o.description"/>
                             </div>
+                           <div class="col-6">
+                                <strong>Payment Code:</strong> <span t-field="o.payment_code"/>
+                            </div>
+                            <t t-if="o.payment_code == 'cheque'">
                             <div class="col-6">
-                                <strong>Type:</strong> <span t-field="o.advance_type"/>
+                                <strong>Cheque No:</strong> <span t-field="o.cheque_no"/>
                             </div>
-                           
+                            </t>
+                             <t t-if="o.payment_code == 'cpo'">
+                            <div class="col-6">
+                                <strong>CPO No:</strong> <span t-field="o.cpo_no"/>
+                            </div>
+                            </t>
                         </div>
                         <div class="row mt-2">
                       
                             <div class="col-6">
-                                <strong>Journal:</strong> <span t-field="o.journal_id"/>
+                                <strong>Bank:</strong> <span t-field="o.journal_id"/>
                             </div>
                             
                          
@@ -36,21 +49,17 @@
                         
                         <div class="row mt-2">
                            
-                            <t t-if="o.advance_type == 'receive'">
                                 <div class="col-6">
                                     <strong>FS Number:</strong> <span t-field="o.fs_number"/>
                                 </div>
-                            </t>
                              <div class="col-6">
                                 <strong>FT:</strong> <span t-field="o.ft"/>
                             </div>
                         </div>
                         <div class="row mt-2">
-                            <t t-if="o.advance_type == 'receive'">
                                 <div class="col-6">
                                     <strong>Machine Code:</strong> <span t-field="o.machine_code"/>
                                 </div>
-                            </t>
                         </div>
                         <!-- Summary Section: Untaxed Amount, Taxes, Total Amount (Right-Aligned) -->
                         <div class="row mt-4">

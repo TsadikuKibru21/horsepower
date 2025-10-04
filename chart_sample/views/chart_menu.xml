@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<record id="action_chart_js" model="ir.actions.client">
+        <field name="name">Chart js Sample</field>
+        <field name="tag">chartjs_sample</field>
+        <field name="target"></field>
+
+    </record>
+
+    <record id="action_chart_js_inventory" model="ir.actions.client">
+        <field name="name">Chart js Sample</field>
+        <field name="tag">chartjs_sample_inventory</field>
+        <field name="target"></field>
+
+    </record>
+        <record id="action_chart_js_purchase_new" model="ir.actions.client">
+        <field name="name">Chart js Sample</field>
+        <field name="tag">purchase_chart</field>
+        <field name="target"></field>
+
+    </record>
+
+<menuitem id="menu_chart_js_sample" 
+              name="Dashboard" web_icon="chart_sample,static/img/icon.png"/>
+<menuitem id="menu_sale_chart_js_sample" action="action_chart_js"
+            sequence="1"  name="Sales" parent="menu_chart_js_sample"/>
+<menuitem id="menu_chart_js_sample_inventory" parent="menu_chart_js_sample" action="action_chart_js_inventory"
+            sequence="3"  name="Inventory" />
+
+<menuitem id="menu_chart_js_sample_purchase" parent="menu_chart_js_sample" action="action_chart_js_purchase_new"
+            sequence="2"  name="Purchase" />
+
+</odoo>

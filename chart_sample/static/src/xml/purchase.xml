@@ -1,0 +1,181 @@
+<templates xml:space="preserve">
+    <t t-name="chart_sample.purchase_chart" owl="1">
+        <div class="big-card p-4 rounded-4 mt-4">
+            
+            <!-- 🏷️ Navbar Card (Smaller Height) -->
+            <div class="navbar-card d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center p-2 mb-3 shadow rounded-4 bg-white">
+                <div class="d-flex flex-column flex-md-row gap-2 w-100">
+                    <input type="text" class="form-control" placeholder="Search..." t-on-input="onSearchQueryChange"/>
+                    <button class="btn btn-primary" t-on-click="fetchData">🔄 Reset</button>
+                </div>
+            </div>
+
+            <!-- 📊 Statistic Cards -->
+            <div class="d-flex flex-wrap flex-md-nowrap gap-3 mb-4">
+                <div id="purchaseCard" class="stat-card blue text-start p-3 rounded-5 shadow position-relative flex-fill" t-on-click="() => goToPurchasesPage('purchase')">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="text-dark">Total Purchases</h6>
+                    </div>
+                    <div class="value-oval position-absolute bottom-0 start-0 ms-2 mb-2">
+                        <p class="fw-bold fs-6"><t t-esc="stats.totalPurchases"/></p>
+                    </div>
+                    <span class="inventory-icon position-absolute bottom-0 end-0 me-2 mb-2">📦</span>
+                </div>
+                <div id="rfqCard" class="stat-card red text-start p-3 rounded-5 shadow position-relative flex-fill" t-on-click="() => goToPurchasesPage('rfq')">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="text-dark">Total RFQs</h6>
+                    </div>
+                    <div class="value-oval position-absolute bottom-0 start-0 ms-2 mb-2">
+                        <p class="fw-bold fs-6"><t t-esc="stats.totalRFQs"/></p>
+                    </div>
+                    <span class="inventory-icon position-absolute bottom-0 end-0 me-2 mb-2">📊</span>
+                </div>
+                <div id="ordersCard" class="stat-card yellow text-start p-3 rounded-5 shadow position-relative flex-fill" t-on-click="() => goToPurchasesPage('order')">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="text-dark">Total Orders</h6>
+                    </div>
+                    <div class="value-oval position-absolute bottom-0 start-0 ms-2 mb-2">
+                        <p class="fw-bold fs-6"><t t-esc="stats.totalOrders"/></p>
+                    </div>
+                    <span class="inventory-icon position-absolute bottom-0 end-0 me-2 mb-2">💰</span>
+                </div>
+                <div id="spentCard" class="stat-card green text-start p-3 rounded-5 shadow position-relative flex-fill" t-on-click="() => goToPurchasesPage('spent')">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="text-dark">Total Spent</h6>
+                    </div>
+                    <div class="value-oval position-absolute bottom-0 start-0 ms-2 mb-2">
+                        <p class="fw-bold fs-6"><t t-esc="stats.totalSpent"/></p>
+                    </div>
+                    <span class="inventory-icon position-absolute bottom-0 end-0 me-2 mb-2">🔄</span>
+                </div>
+            </div>
+
+            <!-- 📈 Graphs Section -->
+            <div class="d-flex flex-column flex-md-row gap-3 overflow-x-auto px-2">
+                <div class="chart-container flex-fill border rounded-4 p-3 bg-white shadow" style="width: 80%; height: 300px;">
+                    <canvas t-ref="canvas" style="width: 100%; height: 100%;"></canvas>
+                </div>
+                <div class="chart-container flex-fill border rounded-4 p-3 bg-white shadow" style="width: 30%; height: 300px;">
+                    <canvas t-ref="canvastwo"></canvas>
+                </div>
+            </div>
+            <div class="chart-container flex-fill border rounded-4 p-3 bg-white shadow mt-3" style="width: 100%; height: 300px;">
+                <canvas t-ref="canvasthree" style="width: 100%; height: 100%;"></canvas>
+            </div>
+        </div>
+
+        <style>
+            /* 🟡 Big Yellow Card */
+            .big-card {
+                background: #f5f8fb;
+                padding: 20px;
+                border-radius: 6px;
+                margin: 20px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            /* 🏷️ Navbar Card (Smaller Height) */
+            .navbar-card {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+            }
+            .filter-dropdown select,
+            .form-control {
+                width: 150px;
+                padding: 5px;
+            }
+            .btn {
+                padding: 5px 12px;
+                font-size: 14px;
+            }
+
+            /* 📊 Stat Cards */
+            .stat-card {
+                flex: 1;
+                border-radius: 6px;
+                position: relative;
+                height: 120px; /* Adjusted height */
+            }
+            .blue { background: #daeaf6; color: black;} 
+            .red { background: #ffe2e5; color: black; } 
+            .yellow { background: #fff4de; color: black; } 
+            .green { background: #dcfce7; color: black; } 
+    
+            /* 📊 Graphs */
+            .chart-container {
+                flex-grow: 1;
+                min-width: 300px; 
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden; /* Ensure content does not overflow */
+            }
+
+            .chart-container canvas {
+                width: 100%;
+                height: 100%;
+            }
+
+            /* 🔘 Oval Value Display */
+            .value-oval {
+                width: 70px;
+                height: 40px;
+                background: #e0e0e0;
+                border-radius: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                bottom: 0; /* Ensure it touches the bottom */
+            }
+
+            /* Center the number inside the oval */
+            .value-oval p {
+                padding-top: 5px; /* Adjust as needed */
+                margin: 0;
+            }
+
+            /* 🎯 Percent Badge */
+            .percent-badge {
+                background: rgba(255, 255, 255, 0.9);
+                color: black;
+                padding: 4px 10px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: bold;
+            }
+
+            /* 📊 Inventory Icon */
+            .inventory-icon {
+                font-size: 24px;
+                opacity: 0.8;
+                bottom: 0; /* Ensure it touches the bottom */
+            }
+
+            /* 📱 Mobile Responsive */
+            @media (max-width: 768px) {
+                .big-card {
+                    overflow-y: auto;
+                }
+                .navbar-card {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 8px;
+                }
+                .d-flex.flex-md-nowrap {
+                    flex-direction: column;
+                }
+                .chart-container {
+                    min-width: 100%;
+                    overflow-x: auto;
+                }
+            }
+        </style>
+    </t>
+</templates>

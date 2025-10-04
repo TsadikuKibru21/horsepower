@@ -80,6 +80,6 @@
     </record>
 
     <menuitem id="menu_customer_enquiry_view" name="Customer Enquiry"
-          parent="sale.menu_sale_report" sequence="5"
+           sequence="30" parent="sale.sale_menu_root"
           action="action_customer_enquiry"/>
 </odoo>

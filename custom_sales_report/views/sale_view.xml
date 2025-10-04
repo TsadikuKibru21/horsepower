@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_page_field" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.page</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+
+            <xpath expr="//field[@name='company_id']" position="after">
+
+                    <field name="quotation_description" readonly="state in ['sale','done']"/>
+
+
+            </xpath>
+
+
+
+         </field>
+        
+    </record>
+
+
+    <record id="commision_product_template_form_view" model="ir.ui.view">
+            <field name="name">commission.product.template.form.view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+              
+                <xpath expr="//field[@name='product_tag_ids']" position="after">
+
+                        <field name="commission_percent" />
+                 
+                </xpath>
+            </field>
+    </record>
+
+
+     
+
+    <record id="commision_product_product_form_view" model="ir.ui.view">
+            <field name="name">commission.product.product.form.view</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+              
+
+                 <xpath expr="//field[@name='product_tag_ids']" position="after">
+
+                        <field name="commission_percent" />
+                 
+                </xpath>
+                
+            </field>
+    </record>
+
+</odoo>
