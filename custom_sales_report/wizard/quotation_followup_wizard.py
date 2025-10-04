@@ -38,6 +38,7 @@ class QuotationFollowupWizard(models.TransientModel):
         text_style = workbook.add_format({'font_name': 'Arial', 'border': 1, 'align': 'left'})
         date_style = workbook.add_format({'font_name': 'Arial', 'border': 1, 'num_format': 'dd-mm-yyyy'})
         currency_style = workbook.add_format({'font_name': 'Arial', 'border': 1, 'num_format': '$#,##0.00'})
+        total_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'border': 1, 'align': 'right'})
 
         sheet = workbook.add_worksheet('Quotation Follow-up Report')
         if self.start_date and self.end_date:
@@ -68,43 +69,64 @@ class QuotationFollowupWizard(models.TransientModel):
 
         # Get data
         domain = [
-            
-            ('state', 'in', ['draft', 'sent', 'to_approve','approved','done']),
+            ('state', 'in', ['draft', 'sent', 'to_approve', 'approved', 'done']),
         ]
-        
-        
         if self.start_date:
             domain.append(('date_order', '>=', self.start_date))
-            
-        if self.start_date:
+        if self.end_date:
             domain.append(('date_order', '<=', self.end_date))
         quotations = self.env['sale.order'].search(domain, order='date_order desc')
+
         row = 4
         today = fields.Date.today()
+        grouped_data = {}
         for quo in quotations:
-            status = 'WIN' if quo.state in ['sale','done'] else 'Quotation Offered'
-            last_followup = quo.write_date.date() if quo.write_date else False
-            sheet.write(row, 0, quo.source_id.name or '', text_style)
-            sheet.write(row, 1, quo.name, text_style)
-            sheet.write(row, 2, quo.date_order, date_style)
-            sheet.write(row, 3, quo.partner_id.name or '', text_style)
-            sheet.write(row, 4, quo.partner_id.phone or '', text_style)
-            sheet.write(row, 5, quo.quotation_description or '', text_style)
-            sheet.write(row, 6, quo.amount_total, currency_style)
-            sheet.write(row, 7, quo.estimated_profit, currency_style)
-            sheet.write(row, 8, status, text_style)
-            if last_followup:
-                sheet.write(row, 9, last_followup, date_style)
-            else:
-                sheet.write(row, 9, '', text_style)
-            sheet.write(row, 10, today, date_style)
+            status = 'WIN' if quo.state in ['sale', 'done'] else 'QUOTATION OFFERED'
+            q_status = (quo.quotation_status or '').upper()
+            if q_status not in grouped_data:
+                grouped_data[q_status] = []
+            grouped_data[q_status].append((quo, status))
+        group_header_style = workbook.add_format({
+            'font_name': 'Arial',
+            'bold': True,
+            'border': 1,
+            'align': 'center',
+            'bg_color': '#D9D9D9'   # light gray background
+        })
+
+        # Write grouped data by quotation_status
+        for q_status, quo_list in grouped_data.items():
+            # Section title
+            sheet.merge_range(row, 0, row, len(headers)-1, q_status, group_header_style)
             row += 1
+            for quo, status in quo_list:
+                last_followup = quo.last_followup_date
+                sheet.write(row, 0, quo.source_id.name or '', text_style)
+                sheet.write(row, 1, quo.name, text_style)
+                sheet.write(row, 2, quo.date_order, date_style)
+                sheet.write(row, 3, quo.partner_id.name or '', text_style)
+                sheet.write(row, 4, quo.partner_id.phone or '', text_style)
+                sheet.write(row, 5, quo.quotation_description or '', text_style)
+                sheet.write(row, 6, quo.amount_total, currency_style)
+                sheet.write(row, 7, quo.margin, currency_style)
+                sheet.write(row, 8, status, text_style)
+                if last_followup:
+                    sheet.write(row, 9, last_followup, date_style)
+                else:
+                    sheet.write(row, 9, '', text_style)
+                sheet.write(row, 10, today, date_style)
+                row += 1
+
+        # Add totals row
+        sheet.write(row, 5, "TOTAL", total_style)
+        sheet.write_formula(row, 6, f"=SUM(G5:G{row})", currency_style)  # Quotation Amount
+        sheet.write_formula(row, 7, f"=SUM(H5:H{row})", currency_style)  # Estimated Profit
 
         workbook.close()
         output.seek(0)
         report_data = output.read()
         output.close()
-        
+
         attachment = self.env['ir.attachment'].create({
             'name': f'quotation_followup_{self.name}.xlsx',
             'type': 'binary',
@@ -120,4 +142,5 @@ class QuotationFollowupWizard(models.TransientModel):
             'url': f'/web/content/?model=ir.attachment&id={attachment.id}&field=datas&filename_field=name&download=true',
             'target': 'self',
         }
+
 

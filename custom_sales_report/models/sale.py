@@ -6,16 +6,8 @@ class SaleOrder(models.Model):
     
     quotation_description=fields.Text(string="Quotation Description") 
     
-    estimated_profit = fields.Float(string='Estimated Profit', compute='_compute_estimated_profit', store=True)
-
-    @api.depends('order_line.price_subtotal', 'order_line.product_uom_qty', 'order_line.product_id.standard_price')
-    def _compute_estimated_profit(self):
-        for record in self:
-            total_cost = 0.0
-            for line in record.order_line:
-                if line.product_id:
-                    total_cost += line.product_uom_qty * line.product_id.standard_price
-            record.estimated_profit = record.amount_untaxed - total_cost
+    last_followup_date = fields.Date(string="Last Follow-up Date",default=fields.Date.today())
+ 
             
 
 class ProductProduct(models.Model):
