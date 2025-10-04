@@ -639,9 +639,9 @@ export class ChartjsSample extends Component {
     
     
     async fetchStats() {
-        const totalSales = await this.orm.searchRead("sale.order", [['state', '=', 'sale']], ["amount_total"]);
+        const totalSales = await this.orm.searchRead("sale.order", [], ["amount_total"]);
         const totalQuotations = await this.orm.searchRead("sale.order", [['state', 'in', ['draft', 'sent','to_approve','approved']]], ["amount_total"]);
-        const totalOrders = await this.orm.searchRead("sale.order", [['state', 'in', ['sale', 'done','sent']]], ["amount_total"]);
+        const totalOrders = await this.orm.searchRead("sale.order", [['state', 'in', ['sale', 'done']]], ["amount_total"]);
         const totalRevenue = await this.orm.searchRead("sale.order", [['state', '=', 'sale']], ["amount_total"]);
     
         const totalSalesAmount = totalSales.reduce((sum, order) => sum + order.amount_total, 0);

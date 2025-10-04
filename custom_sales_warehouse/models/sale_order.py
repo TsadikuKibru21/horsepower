@@ -16,7 +16,12 @@ class SaleOrder(models.Model):
         store=True,
         readonly=False
     )
-    quotation_status = fields.Char(string="Quotation Status")
+    quotation_status = fields.Selection([
+        ('a','A'),
+        ('b','B'),
+        ('c','C'),
+        ('d','D'),
+        ],string="Quotation Status")
    
     state = fields.Selection([
         
