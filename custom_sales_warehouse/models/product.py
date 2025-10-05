@@ -1,6 +1,25 @@
-from odoo import api, fields, models
+from odoo import api, fields, models,_
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError,AccessError
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+    is_contact_manager_user = fields.Boolean(
+        string='Is Contact Manager User',
+        compute='_compute_is_contact_manager_user',
+        store=False
+    )
+    @api.depends('name')
+    def _compute_is_contact_manager_user(self):
+        for partner in self:
+            partner.is_contact_manager_user = self.env.user.has_group('custom_sales_warehouse.group_contact_manager')
+    is_contact_manager_user
+    def write(self, vals):
+      
+        if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_contact_manager"):
+                raise AccessError(_("You are not allowed to Create Contact."))
+        res = super().write(vals)
+       
+        return res
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
@@ -9,6 +28,30 @@ class ProductTemplate(models.Model):
     def _compute_display_name(self):
         for record in self:
             record.display_name = record.name
+            
+        
+    def create(self, vals):
+        if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_product_manager"):
+            raise AccessError(_("You are not allowed to create products."))
+        return super().create(vals)
+
+    def write(self, vals):
+        allowed_fields = {
+            "standard_price", 
+            "last_purchase_price", 
+            "currency_id", 
+            "seller_ids"
+        }
+        if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_product_manager"):
+            if not set(vals.keys()).issubset(allowed_fields):
+                raise AccessError(_("You are not allowed to modify products."))
+        return super().write(vals)
+
+    def unlink(self):
+        if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_product_manager"):
+            raise AccessError(_("You are not allowed to delete products."))
+        return super().unlink()
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -57,13 +100,33 @@ class ProductProduct(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super(ProductProduct, self).create(vals)
+        if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_product_manager"):
+            raise AccessError(_("You are not allowed to create product variants."))
+        res = super().create(vals)
         res._inverse_default_code()
         res._check_item_code_unique()
         return res
 
     def write(self, vals):
-        res = super(ProductProduct, self).write(vals)
+        allowed_fields = {
+            "standard_price", 
+            "last_purchase_price", 
+            "currency_id", 
+            "seller_ids"
+        }
+        if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_product_manager"):
+            if not set(vals.keys()).issubset(allowed_fields):
+                raise AccessError(_("You are not allowed to modify product."))
+        res = super().write(vals)
         self._inverse_default_code()
         self._check_item_code_unique()
         return res
+
+    
+    def unlink(self):
+        if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_product_manager"):
+            raise AccessError(_("You are not allowed to delete products."))
+        return super().unlink()
+
+    
+
