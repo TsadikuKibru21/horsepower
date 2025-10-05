@@ -10,6 +10,29 @@
             <xpath expr="//field[@name='vat']" position="attributes">
                 <attribute name="string">TIN</attribute>
             </xpath>
+             <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="readonly">is_contact_manager_user == False</attribute>
+            </xpath>
+            <xpath expr="//field[@name='company_type']" position="attributes">
+                <attribute name="readonly">is_contact_manager_user == False</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="readonly">is_contact_manager_user == False</attribute>
+                
+            </xpath>
+
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="readonly">is_contact_manager_user == False</attribute>
+                
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="attributes">
+                <attribute name="readonly">is_contact_manager_user == False</attribute>
+            </xpath>
+            <!-- Add new fields to the form -->
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="is_contact_manager_user" invisible="1"/>
+            </xpath>
+
         </field>
     </record>
 </odoo>

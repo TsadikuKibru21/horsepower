@@ -1,5 +1,5 @@
-from odoo import models, fields,api
-
+from odoo import models, fields,api,_
+from odoo.exceptions import UserError, ValidationError
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
@@ -23,3 +23,11 @@ class StockPicking(models.Model):
             warehouse = picking.picking_type_id.warehouse_id
             managers = warehouse.warehouse_manager_ids
             picking.show_validate_button = self.env.uid in managers.ids if managers else False
+            
+            
+    def button_validate(self):
+        for picking in self:
+            if picking.show_validate_button != True:
+                raise ValidationError(_("You are not allowed to validate the Operation."))
+
+        return super(StockPicking, self).button_validate()

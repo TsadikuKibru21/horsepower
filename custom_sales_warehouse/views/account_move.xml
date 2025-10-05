@@ -21,5 +21,13 @@
         </field>
     </record>
 
+
+    <menuitem id="menu_order_to_invoice_accounting"
+              name="Orders to Invoice"
+              parent="account.menu_finance_entries"   
+              sequence="50"
+              action="sale.action_orders_to_invoice"  
+              groups="account.group_account_manager"/> 
+
    
 </odoo>
