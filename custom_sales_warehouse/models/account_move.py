@@ -2,6 +2,27 @@ from odoo import api, fields, models
 
 
 
+class AccountTaxGroup(models.Model):
+    _inherit = 'account.tax.group'
+    is_closing_required = fields.Boolean(
+        string='Closing Required',
+    )
+    
+    @api.model
+    def _check_misconfigured_tax_groups(self, company, countries):
+        """Extend to check misconfigured tax groups only if closing is required."""
+        # Build domain with the new condition for is_closing_required
+        domain = [
+            *self.env['account.tax']._check_company_domain(company),
+            ('country_id', 'in', countries.ids),
+            ('tax_group_id.is_closing_required', '=', True),  # Only check groups that require closing
+            '|',
+            ('tax_group_id.tax_payable_account_id', '=', False),
+            ('tax_group_id.tax_receivable_account_id', '=', False),
+        ]
+        # Call super with the extended domain (note: super uses its own domain, but we override fully here for clarity)
+        # Since we're overriding, we use the new domain directly
+        return bool(self.env['account.tax'].search(domain, limit=1))
 class AccountMoveLine(models.Model):
     _inherit="account.move.line"
 
