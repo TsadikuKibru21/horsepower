@@ -2,14 +2,16 @@
     <t t-name="chart_sample.purchase_chart" owl="1">
         <div class="big-card p-4 rounded-4 mt-4">
             
-            <!-- 🏷️ Navbar Card (Smaller Height) -->
             <div class="navbar-card d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center p-2 mb-3 shadow rounded-4 bg-white">
                 <div class="d-flex flex-column flex-md-row gap-2 w-100">
+                    <label for="dateFrom" class="form-label">Date From</label>
+                    <input type="date" id="dateFrom" class="form-control" t-att-value="startDate.value" t-on-change="onStartDateChange"/>
+                    <label for="dateTo" class="form-label">Date To</label>
+                    <input type="date" id="dateTo" class="form-control" t-att-value="endDate.value" t-on-change="onEndDateChange"/>
                     <input type="text" class="form-control" placeholder="Search..." t-on-input="onSearchQueryChange"/>
-                    <button class="btn btn-primary" t-on-click="fetchData">🔄 Reset</button>
+                    <!-- <button class="btn btn-primary" t-on-click="fetchData">🔄 Reset</button> -->
                 </div>
             </div>
-
             <!-- 📊 Statistic Cards -->
             <div class="d-flex flex-wrap flex-md-nowrap gap-3 mb-4">
                 <div id="purchaseCard" class="stat-card blue text-start p-3 rounded-5 shadow position-relative flex-fill" t-on-click="() => goToPurchasesPage('purchase')">
