@@ -808,7 +808,7 @@ goToSalesPage(filter) {
 
     // Define filter logic based on the filter type passed
     if (filter === "sale") {
-        domain.push(["state", "=", "sale"]);
+        // domain.push([]);
     } else if (filter === "quotation") {
         domain.push(["state", "in", ["draft", "sent",'to_approve','approved']]);
     } else if (filter === "order") {
