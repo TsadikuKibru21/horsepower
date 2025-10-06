@@ -101,6 +101,10 @@ export class ChartjsSampleInventory extends Component {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         }).format(totalStockValue.reduce((sum, product) => sum + (product.qty_available * product.standard_price), 0));
+        
+        const totalStockValueAmount = totalStockValue.reduce((sum, product) => sum + (product.qty_available * product.standard_price), 0);
+        this.stats.totalStockValue = totalStockValueAmount.toFixed(2); // Format to 2 decimal places
+
         this.stats.stockMovements = stockMovements.length;
     }
 
