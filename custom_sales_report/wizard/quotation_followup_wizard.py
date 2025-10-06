@@ -37,7 +37,7 @@ class QuotationFollowupWizard(models.TransientModel):
         header_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'border': 1, 'align': 'center'})
         text_style = workbook.add_format({'font_name': 'Arial', 'border': 1, 'align': 'left'})
         date_style = workbook.add_format({'font_name': 'Arial', 'border': 1, 'num_format': 'dd-mm-yyyy'})
-        currency_style = workbook.add_format({'font_name': 'Arial', 'border': 1, 'num_format': '$#,##0.00'})
+        currency_style = workbook.add_format({'font_name': 'Arial', 'border': 1, 'num_format': '#,##0.00'})
         total_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'border': 1, 'align': 'right'})
 
         sheet = workbook.add_worksheet('Quotation Follow-up Report')
