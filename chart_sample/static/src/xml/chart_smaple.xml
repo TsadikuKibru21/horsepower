@@ -3,29 +3,15 @@
         <div class="big-card p-4 rounded-4 mt-4">
             
             <!-- 🏷️ Navbar Card (Smaller Height) -->
+        
+
             <div class="navbar-card d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center p-2 mb-3 shadow rounded-4 bg-white">
                 <div class="d-flex flex-column flex-md-row gap-2 w-100">
-                    <!-- <div class="filter-dropdown md:w-1/4">
-                        <select id="filterType" class="form-select" t-on-change="onFilterChangenew">
-                            <option value="draft">Draft</option>
-                            <option value="sent">Sent</option>
-                            <option value="sale">Sale</option>
-                           
-                            <option value="cancel">Cancelled</option>
-                        </select>
-                    </div> -->
-                    <!-- <input type="date" id="dateRange" class="form-control" t-on-change="onDateRangeChange"/> -->
                     <label for="dateFrom" class="form-label">Date From</label>
-                    <input type="date" id="dateFrom" class="form-control" t-on-change="onStartDateChange"/>
+                    <input type="date" id="dateFrom" class="form-control" t-att-value="startDate.value" t-on-change="onStartDateChange"/>
                     <label for="dateTo" class="form-label">Date To</label>
-                    <input type="date" id="dateTo" class="form-control" t-on-change="onEndDateChange"/>
+                    <input type="date" id="dateTo" class="form-control" t-att-value="endDate.value" t-on-change="onEndDateChange"/>
                     <input type="text" class="form-control" placeholder="Search..." t-on-input="onSearchQueryChange"/>
-                     <!-- <label for="customerFilter" class="form-label">Filter by Customer</label>
-                    <input type="text" id="customerFilter" class="form-control" placeholder="Enter customer name..." t-on-input="onCustomerFilterChange"/>
-                    <label for="productFilter" class="form-label">Filter by Product</label>
-                    <input type="text" id="productFilter" class="form-control" placeholder="Enter product name..." t-on-input="onProductFilterChange"/> -->
-                    <!-- <button class="btn btn-success" id="topCustomersBtn">🏆 Top Customers</button>
-                    <button class="btn btn-warning" id="topProductsBtn">🔥 Top Products</button> -->
                     <!-- <button class="btn btn-primary" t-on-click="fetchData">🔄 Reset</button> -->
                 </div>
             </div>

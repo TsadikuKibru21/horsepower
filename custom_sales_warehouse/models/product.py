@@ -12,7 +12,7 @@ class ResPartner(models.Model):
     def _compute_is_contact_manager_user(self):
         for partner in self:
             partner.is_contact_manager_user = self.env.user.has_group('custom_sales_warehouse.group_contact_manager')
-    is_contact_manager_user
+    
     def write(self, vals):
       
         if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_contact_manager"):
