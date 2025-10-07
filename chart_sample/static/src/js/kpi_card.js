@@ -51,16 +51,20 @@ export class PurchaseChart extends Component {
         this.goToPurchasesPage = this.goToPurchasesPage.bind(this);
     }
 
-    getCurrentMonthStart() {
+   getCurrentMonthStart() {
+        // const date = new Date();
+        // return new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
         const date = new Date();
-        return new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
+         const startDate = new Date(date);
+        startDate.setDate(date.getDate() - 30);
+        return startDate.toISOString().split('T')[0];
     }
 
     getCurrentMonthEnd() {
         const date = new Date();
-        return new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split('T')[0];
+        return date.toISOString().split('T')[0];
+        // return new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split('T')[0];
     }
-
     async fetchData() {
 
         const domain = [];
