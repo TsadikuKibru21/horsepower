@@ -1,5 +1,6 @@
 from odoo import api, fields, models,_
-
+import logging
+_logger = logging.getLogger(__name__)
 from odoo.exceptions import UserError, ValidationError,AccessError
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -13,13 +14,27 @@ class ResPartner(models.Model):
         for partner in self:
             partner.is_contact_manager_user = self.env.user.has_group('custom_sales_warehouse.group_contact_manager')
     
-    def write(self, vals):
+    def create(self, vals):
       
         if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_contact_manager"):
                 raise AccessError(_("You are not allowed to Create Contact."))
+        res = super().create(vals)
+       
+        return res
+    def write(self, vals):
+        
+        allowed_fields = {
+            "tz", 
+         
+        }
+        if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_contact_manager"):
+            if not set(vals.keys()).issubset(allowed_fields):
+               
+                raise AccessError(_("You are not allowed to Update Contact."))
         res = super().write(vals)
        
         return res
+   
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
