@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_petty_cash_refund_form" model="ir.ui.view">
+        <field name="name">petty.cash.refund.form</field>
+        <field name="model">petty.cash.refund</field>
+        <field name="arch" type="xml">
+            <form string="Petty Cash Refund">
+                <group>
+                    <field name="amount"/>
+                    <field name="from_account_id" options="{'no_create': True}"/>
+                </group>
+                <footer>
+                    <button name="action_refund" string="Refund" type="object" confirm="Are you sure you want to Refund Petty Cash?" class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_petty_cash_close_form" model="ir.ui.view">
+        <field name="name">petty.cash.close.form</field>
+        <field name="model">petty.cash.close</field>
+        <field name="arch" type="xml">
+            <form string="Petty Cash Close">
+                <group>
+                    <field name="total_amount" readonly="1"/>
+                    <field name="remaining_amount" readonly="1"/>
+                    <field name="to_account_id"/>
+                    <field name="is_include_remaining_amount" invisible="remaining_amount == 0"/>
+                    <field name="suspended_account_id" invisible="is_include_remaining_amount == True"/>
+                    
+                    
+                </group>
+                <footer>
+                    <button name="action_close" string="Close" type="object" confirm="Are you sure you want to Close Petty Cash?" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

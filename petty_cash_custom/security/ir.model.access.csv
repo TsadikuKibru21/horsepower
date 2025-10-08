@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_petty_cash_custom,petty.cash.custom,model_petty_cash_custom,base.group_user,1,1,1,1
+access_petty_cash_expense_line,petty.cash.expense.line,model_petty_cash_expense_line,base.group_user,1,1,1,1
+access_previous_petty_cash_expense_line,previous.petty.cash.expense.line,model_previous_petty_cash_expense_line,base.group_user,1,1,1,1
+access_petty_cash_refund,petty.cash.refund,model_petty_cash_refund,base.group_user,1,1,1,1
+access_petty_cash_close,petty.cash.close,model_petty_cash_close,base.group_user,1,1,1,1

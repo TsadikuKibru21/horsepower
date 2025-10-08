@@ -62,7 +62,7 @@
             <!-- Add tin_id after partner_id -->
             <xpath expr="//label[@for='partner_id']" position="before">
                 
-                <field name="tin_id" options="{'no_create': True}" domain="[('partner_id.is_customer', '=', True), '|', '|', ('partner_id.company_id','=', company_id), ('partner_id.company_id', '=', False), ('partner_id.company_id', 'child_of', company_id)] if move_type in ('out_invoice', 'out_refund') else [('partner_id.is_vendor', '=', True), '|', '|', ('partner_id.company_id','=', company_id), ('partner_id.company_id', '=', False), ('partner_id.company_id', 'child_of', company_id)]"/>
+                <field name="tin_id" invisible="move_type == 'entry'" options="{'no_create': True}" domain="[('partner_id.is_customer', '=', True), '|', '|', ('partner_id.company_id','=', company_id), ('partner_id.company_id', '=', False), ('partner_id.company_id', 'child_of', company_id)] if move_type in ('out_invoice', 'out_refund') else [('partner_id.is_vendor', '=', True), '|', '|', ('partner_id.company_id','=', company_id), ('partner_id.company_id', '=', False), ('partner_id.company_id', 'child_of', company_id)]"/>
             </xpath>
         </field>
     </record>

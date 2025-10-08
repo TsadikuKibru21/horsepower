@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_petty_cash_custom_form" model="ir.ui.view">
+        <field name="name">petty.cash.custom.form</field>
+        <field name="model">petty.cash.custom</field>
+        <field name="arch" type="xml">
+            <form string="Petty Cash Custom">
+                <header>
+                    <button name="action_request" string="Refund Request" type="object"  groups="petty_cash_custom.group_petty_cash_request" confirm="Are you sure you want to Request Petty Cash?" invisible="state != 'draft'"/>
+                    <button name="action_approve" string="Refund Approve" type="object" groups="petty_cash_custom.group_petty_approve" confirm="Are you sure you want to Approve Petty Cash?" invisible="state != 'request'"/>
+                    <button name="action_close" string="Close" type="object" groups="petty_cash_custom.group_petty_approve"  confirm="Are you sure you want to Close Petty Cash?" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,request,closed"/>
+                </header>
+                <sheet>
+                <div name="button_box" class="oe_button_box">
+                           
+                            <button name="action_view_journals" string="Journals" invisible="journal_count == 0" type="object" class="oe_stat_button" icon="fa-list">
+                                <field name="journal_count" string="Journals" widget="statinfo"/>
+                            </button>
+                        </div>
+                    <group>
+                    <widget
+                            name="web_ribbon"
+                            title="Closed"
+                            bg_color="text-bg-danger"
+                            invisible="state != 'closed'"/>
+                        <group>
+                            
+                            <field name="name" readonly="1"/>
+                            <field name="requester_id" readonly="1"/>
+                            
+                            <field name="description" readonly="state == 'closed'"/>
+                            <field name="total_amount"/>
+                            <field name="used_amount"/>
+                            <field name="previous_used_amount"/>
+                            <field name="remaining_amount"/>
+                        </group>
+                        <group>
+                            <field name="journal_id" readonly="state == 'closed'" options="{'no_create': True}"/>
+                            <field name="petty_cash_account_id" readonly="state == 'closed'" options="{'no_create': True}"/>
+                            <field name="bank_account_id" invisible="1" options="{'no_create': True}"/>
+
+                            
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Expense">
+                            <field name="expense_line_ids" readonly="state == 'closed'">
+                                <tree editable="bottom">
+                                    
+                                    <field name="description"/>
+                                    <field name="amount"/>
+                                    <field name="date" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Previous Expenses">
+                            <field name="previous_expense_line_ids" readonly="1">
+                                <tree editable="bottom">
+                                   
+                                    <field name="description"/>
+                                    <field name="amount"/>
+                                     <field name="date"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                <field name="message_follower_ids"/>
+                <field name="activity_ids"/>
+                <field name="message_ids"/>
+            </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_petty_cash_custom_tree" model="ir.ui.view">
+        <field name="name">petty.cash.custom.tree</field>
+        <field name="model">petty.cash.custom</field>
+        <field name="arch" type="xml">
+            <tree string="Petty Cash Custom">
+                <field name="name"/>
+                <field name="total_amount"/>
+                <field name="used_amount"/>
+                <field name="remaining_amount"/>
+                <field name="description"/>
+                <field name="state"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_petty_cash_custom" model="ir.actions.act_window">
+        <field name="name">Petty Cash</field>
+        <field name="res_model">petty.cash.custom</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_petty_cash_custom_root" name="Petty Cash Management" groups="petty_cash_custom.group_petty_cash_request,petty_cash_custom.group_petty_approve" web_icon="petty_cash_custom,static/description/icon.png"/>
+    <menuitem id="menu_petty_cash_custom" name="Petty Cash" groups="petty_cash_custom.group_petty_cash_request,petty_cash_custom.group_petty_approve" parent="menu_petty_cash_custom_root" action="action_petty_cash_custom"/>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+       
+
+        <record id="seq_petty_cash_id" model="ir.sequence">
+            <field name="name">Petty Cash Sequence</field>
+            <field name="code">petty.cash.custom</field>
+            <field name="prefix">PCH/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"></field>
+        </record>
+
+         
+    </data>
+</odoo>
