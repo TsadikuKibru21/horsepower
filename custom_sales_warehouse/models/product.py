@@ -22,13 +22,21 @@ class ResPartner(models.Model):
        
         return res
     def write(self, vals):
-        _logger.info("############################### update vals")
-        _logger.info(vals)
+
         if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_contact_manager"):
-                raise AccessError(_("You are not allowed to Update Contact."))
+        
+            allowed_fields = {
+                "tz", 
+            
+            }
+            if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_contact_manager"):
+                if not set(vals.keys()).issubset(allowed_fields):
+                
+                    raise AccessError(_("You are not allowed to Update Contact."))
         res = super().write(vals)
        
         return res
+   
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
