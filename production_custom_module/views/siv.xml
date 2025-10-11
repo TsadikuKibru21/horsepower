@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+     <record id="view_store_request_tree" model="ir.ui.view">
+        <field name="name">store.request.tree</field>
+        <field name="model">store.request</field>
+        <field name="arch" type="xml">
+            <tree string="Store Requests">
+                <field name="name"/>
+                <field name="warehouse_id"/>
+                <field name="location_id"/>
+                <field name="destination_location_id"/>
+             
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+        <record id="view_store_request_form" model="ir.ui.view">
+            <field name="name">store.request.form</field>
+            <field name="model">store.request</field>
+            <field name="arch" type="xml">
+                <form string="store Request">
+                    <header>
+
+                            <button name="action_submit" type="object" invisible="state != 'draft'"  string="Submit" class="btn-primary" groups="production_custom_module.group_submitter,production_custom_module.group_validator"/>
+                            <button name="action_validate" type="object" invisible="state != 'submitted'" string="Validate" class="btn-primary" groups="production_custom_module.group_validator"/>
+                            <!-- <button name="action_create_transfer" type="object" invisible="state != 'validated'" string="Create Transfer" groups="store_request_custom.group_validator" class="btn-primary"/> -->
+                            <field name="state" widget="statusbar" statusbar_visible="draft,submitted,validated"/>
+
+                    </header>
+                    <sheet>
+                     <div class="oe_button_box" name="button_box">
+                         <button name="view_stock_picking"
+                                    type="object"
+                                    icon="fa-truck"
+                                    invisible="picking_id == False"
+                                    class="oe_stat_button">
+                                <field name="picking_id" widget="statinfo" string="Transfer"/>
+                            </button>
+                       
+                         <button name="view_account_move"
+                                        type="object"
+                                        icon="fa-tree"
+                                        string="Journal Entry"
+                                        class="oe_stat_button"
+                                        invisible="journal_id == False"
+                        
+                        >   <field name="journal_id" widget="statinfo" string="Journal"/>
+                            </button>
+
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name" readonly="1"/>
+                                <field name="warehouse_id" readonly="state == 'validated'"/>
+                                <field name="location_id" readonly="state == 'validated'"/>
+                                <field name="destination_location_id" readonly="state == 'validated'"/>
+
+                             </group>
+                             <group>
+                                    <field name="transfer_type" readonly="state == 'validated'"/>
+                                    <field name="submit_user_id" readonly="1"/>
+                                    <field name="submitted_date" readonly="1"/>
+                                    <field name="validate_user_id" readonly="1"/>
+                                    <field name="validated_date" readonly="1"/>
+                              </group>
+                        </group>
+                        <notebook>
+                            <page string="Voucher Lines">
+                                <field name="voucher_lines" readonly="state == 'validated'">
+                                    <tree editable="bottom">
+                                        <field name="product_id" domain="[('qty_available', '&gt;', 0)]"/>
+                                        <field name="available_qty" readonly="1"/>
+                                        <field name="quantity"/>
+                                        <field name="cost"/>
+                                        <field name="total_cost" readonly="1" sum="Total Cost"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                      
+                    </sheet>
+                     <div class="oe_chatter">
+                <field name="message_follower_ids"/>
+                <field name="activity_ids"/>
+                <field name="message_ids"/>
+            </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action and Menu -->
+        <record id="action_store_request" model="ir.actions.act_window">
+            <field name="name">Store Issue</field>
+            <field name="res_model">store.request</field>
+            <field name="view_mode">tree,form</field>
+
+        </record>
+        <menuitem id="menu_production_siv" name="Production" web_icon="production_custom_module,static/img/icon.png" sequence="30"/>
+
+        <menuitem id="menu_store_request" name="Store Issue" parent="menu_production_siv" groups="production_custom_module.group_submitter,production_custom_module.group_validator" action="action_store_request" sequence="30"/>
+    </data>
+</odoo>

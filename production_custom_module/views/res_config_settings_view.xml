@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_res_config_settings_inherit_inventory_valuation" model="ir.ui.view">
+        <field name="name">res.config.settings.inherit.inventory.valuation</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+               <xpath expr="//field[@name='group_stock_multi_locations']" position="after">
+                <div class="row">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="inventory_valuation_journal_id" string="Inventory Valuation Journal"/>
+                            <div class="content-group">
+                                <field name="inventory_valuation_journal_id" domain="[('type', '=', 'general'), ('company_id', '=', company_id)]"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

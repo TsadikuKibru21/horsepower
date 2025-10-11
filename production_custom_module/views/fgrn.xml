@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+       <!-- FGRN Tree View -->
+    <record id="view_fgrn_tree" model="ir.ui.view">
+        <field name="name">fgrn.return.tree</field>
+        <field name="model">fgrn.return</field>
+        <field name="arch" type="xml">
+            <tree string="Finished Good Returns">
+                <field name="name"/>
+                <field name="warehouse_id"/>
+                <field name="source_location_id"/>
+                <field name="destination_location_id"/>
+                <field name="total_cost"/>
+                <field name="state"/>
+                <field name="submitted_date"/>
+                <field name="validated_date"/>
+            </tree>
+        </field>
+    </record>
+    <!-- FGRN Form View -->
+    <record id="view_fgrn_form" model="ir.ui.view">
+        <field name="name">fgrn.return.form</field>
+        <field name="model">fgrn.return</field>
+        <field name="arch" type="xml">
+            <form string="Finished Good Return">
+                <header>
+                    <button name="action_submit" string="Submit" type="object" invisible="state != 'draft'" class="btn-primary" groups="production_custom_module.group_submitter,production_custom_module.group_validator"/>
+                    <button name="action_validate" string="Validate" type="object" invisible="state != 'submitted'" class="btn-primary" groups="production_custom_module.group_validator"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,validated"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="view_stock_picking" type="object" class="oe_stat_button" icon="fa-truck" invisible="picking_id == False"
+                                >
+                            <field name="picking_id" widget="statinfo" string="Transfer"/>
+                        </button>
+                          <button name="view_account_move"
+                                        type="object"
+                                        icon="fa-tree"
+                                        string="Journal Entry"
+                                        class="oe_stat_button"
+                                        invisible="journal_id == False"
+                        
+                        >   <field name="journal_id" widget="statinfo" string="Journal"/>
+                            </button>
+
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="warehouse_id" readonly="state == 'validated'"/>
+                            <field name="source_location_id" readonly="state == 'validated'"/>
+                            <field name="destination_location_id" readonly="state == 'validated'"/>
+                        </group>
+                        <group>
+                            <field name="store_issue_ids" widget="many2many_tags" domain="[('remaining_cost', '>', 0)]" readonly="state == 'validated'"/>
+                            <!-- <field name="divided_by"/> -->
+                            <field name="overhead_cost" readonly="state == 'validated'"/>
+                            <field name="total_cost" readonly="1"/>
+                            <field name="submitted_date" />
+                            <field name="validated_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Bill of Materials">
+                            <field name="bill_of_material_lines" readonly="state == 'validated'">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="cost"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                 <div class="oe_chatter">
+                <field name="message_follower_ids"/>
+                <field name="activity_ids"/>
+                <field name="message_ids"/>
+            </div>
+            </form>
+        </field>
+    </record>
+
+ 
+
+
+    <!-- FGRN Actions -->
+    <record id="action_fgrn_return" model="ir.actions.act_window">
+        <field name="name">Finished Good Returns</field>
+        <field name="res_model">fgrn.return</field>
+        <field name="view_mode">tree,form</field>
+      
+    </record>
+
+    <!-- FGRN Menu -->
+    <menuitem id="menu_fgrn_root" 
+              name="Finished Good Returns" 
+              parent="menu_production_siv" 
+               action="action_fgrn_return" 
+              groups="production_custom_module.group_submitter,production_custom_module.group_validator"
+              sequence="50"/>
+  
+</odoo>
