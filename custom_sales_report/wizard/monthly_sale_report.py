@@ -113,7 +113,7 @@ class MonthlySalesReportWizard(models.TransientModel):
             qty = line.product_uom_qty
             unit_price = line.price_unit
             total_price = line.price_subtotal
-            commission_percent = line.product_id.commission_percent or 0.0
+            commission_percent = line.commission_percent or 0.0
             commission = total_price * (commission_percent / 100.0)
             cost = qty * (line.product_id.standard_price or 0.0)
             profit = total_price - cost

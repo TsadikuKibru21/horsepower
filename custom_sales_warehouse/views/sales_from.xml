@@ -41,13 +41,13 @@
     </record> -->
 
      <record id="action_sales_from" model="ir.actions.act_window">
-            <field name="name">Sales From</field>
+            <field name="name">Consignment</field>
             <field name="res_model">sales.from</field>
             <field name="view_mode">tree</field>
         </record>
    <menuitem
         id="menu_sales_from"
-        name="Sales From"
+        name="Consignment"
         parent="sale.menu_sale_config"
         action="action_sales_from"
         sequence="10"

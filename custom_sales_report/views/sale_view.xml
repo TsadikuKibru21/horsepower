@@ -7,7 +7,15 @@
         <field name="arch" type="xml">
 
 
-          
+            <xpath expr="//field[@name='product_tag_ids']" position="after">
+
+                        <field name="commission_percent" />
+                 
+                </xpath>
+            
+            <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="before">
+                        <field name="commission_percent" />
+                </xpath>
 
              <xpath expr="//page[@name='other_information']" position="before">
                 <page string="Quotation Follow-up" name="quotation_followup">

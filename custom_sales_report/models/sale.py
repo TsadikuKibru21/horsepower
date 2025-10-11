@@ -8,7 +8,10 @@ class SaleOrder(models.Model):
     
     last_followup_date = fields.Date(string="Last Follow-up Date",default=fields.Date.today())
  
-            
+class SaleOrderLine(models.Model):
+    _inherit="sale.order.line"
+    commission_percent = fields.Float(string='Commission Percent',related="product_id.commission_percent" ,help='Commission percentage for this product')
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
