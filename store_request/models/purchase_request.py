@@ -19,7 +19,7 @@ class PurchaseRequest(models.Model):
     checked_by = fields.Many2one('res.users', string="Confirmed by",  readonly=True, store=True)
     checked_date = fields.Date(string='Confirmed Date', readonly=True,)
 
-
+    requester_id=fields.Many2one('res.users',string="Requester Name")
 
     purchase_order_count = fields.Integer(string='Purchase Order Count', compute='_compute_purchase_order_count')
 

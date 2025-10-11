@@ -34,9 +34,9 @@
                         </div>
                         <group>
                             <group>
-                                <field name="effective_date" readonly="1"/>
+                                <field name="effective_date" readonly="state != 'draft'"/>
                                  
-                                
+                                <field name="requester_id" readonly="1"/>
                             </group>
                            
                         </group>
@@ -88,6 +88,9 @@
             <field name="arch" type="xml">
                 <tree string="Purchase Requests" create="1" decoration-info="state == 'draft'" decoration-warning="state == 'prepared'" decoration-success="state in ('approved','confirmed')">
                     <field name="name"/>
+                    <field name="effective_date"/>
+                    <field name="requester_id"/>
+                    
                     <field name="state"/>
                 </tree>
             </field>

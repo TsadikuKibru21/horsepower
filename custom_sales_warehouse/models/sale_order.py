@@ -184,6 +184,7 @@ class SaleOrder(models.Model):
                     'effective_date': fields.Date.today(),
                     'request_lines': purchase_request_lines,
                     'sale_order': order.id,
+                    'requester_id':self.env.user.id,
                 })
                 _logger.info("Created purchase request %s for order: %s", purchase_request.name, order.name)
 
