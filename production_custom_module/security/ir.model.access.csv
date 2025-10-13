@@ -4,3 +4,5 @@ access_store_request_line,access_store_request_line,model_store_request_line,bas
 access_fgrn_return,access_fgrn_return,model_fgrn_return,base.group_user,1,1,1,1
 
 access_fgrn_bom_line,access_fgrn_bom_line,model_fgrn_bom_line,base.group_user,1,1,1,1
+access_fgrn_output_line,fgrn.output.line,model_fgrn_output_line,base.group_user,1,1,1,1
+

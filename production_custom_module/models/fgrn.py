@@ -33,6 +33,7 @@ class FGRN(models.Model):
     validated_date = fields.Date(string="Validated Date", readonly=True)
     picking_id = fields.Many2one('stock.picking', string="Transfer", readonly=True)
     journal_id = fields.Many2one('account.move', string="Journal", readonly=True)
+    finished_good_lines = fields.One2many('fgrn.output.line', 'fgrn_id', string="Finished Good Lines")
 
     @api.model
     def create(self, vals):
@@ -132,7 +133,7 @@ class FGRN(models.Model):
     def _create_stock_transfer(self):
         """Create stock picking for quantity transfer"""
         stock_moves = []
-        for line in self.bill_of_material_lines:
+        for line in self.finished_good_lines:
             if line.quantity > 0:
                 stock_move_vals = {
                     'name': f"FGRN {self.name} - {line.product_id.name}",
@@ -198,12 +199,12 @@ class FGRN(models.Model):
 
     def _update_product_costs(self):
         """Update product costs based on divided_by method"""
-        if not self.bill_of_material_lines:
+        if not self.finished_good_lines:
             return
         
-        total_quantity = sum(line.quantity for line in self.bill_of_material_lines if line.quantity > 0)
+        total_quantity = sum(line.quantity for line in self.finished_good_lines if line.quantity > 0)
         
-        for line in self.bill_of_material_lines:
+        for line in self.finished_good_lines:
             if line.quantity <= 0:
                 continue
                 
@@ -254,7 +255,7 @@ class FGRNBOMLine(models.Model):
     fgrn_id = fields.Many2one('fgrn.return', string="FGRN", ondelete='cascade')
     product_id = fields.Many2one('product.product', string="Product", required=True)
     quantity = fields.Float(string="Quantity", required=True, default=0.0)
-    cost = fields.Float(string="Cost",compute="_onchange_product_id" ,readonly=True)
+    cost = fields.Float(string="Cost",related="product_id.standard_price" ,readonly=True)
     store_issue_id = fields.Many2one('store.request', string="Store Issue")
     original_store_line_id = fields.Many2one('store.request.line', string="Original Store Line", readonly=True)
     available_qty = fields.Float(
@@ -281,6 +282,25 @@ class FGRNBOMLine(models.Model):
             if record.quantity <= 0:
                 raise ValidationError(_("Quantity must be greater than 0"))
 
+    
+
+  
+  
+  
+class FGRNOUTPUTLine(models.Model):
+    _name = 'fgrn.output.line'
+    _description = 'FGRN Bill of Material Line'
+
+    fgrn_id = fields.Many2one('fgrn.return', string="FGRN", ondelete='cascade')
+    product_id = fields.Many2one('product.product', string="Product", required=True)
+    quantity = fields.Float(string="Quantity", required=True, default=0.0)
+    cost = fields.Float(string="Cost",compute="_onchange_product_id" ,readonly=True)
+    store_issue_id = fields.Many2one('store.request', string="Store Issue")
+    original_store_line_id = fields.Many2one('store.request.line', string="Original Store Line", readonly=True)
+
+
+  
+
     @api.onchange('product_id')
     def _onchange_product_id(self):
         for record in self:
@@ -292,5 +312,3 @@ class FGRNBOMLine(models.Model):
                 matching_line = all_lines.filtered(lambda l: l.product_id == record.product_id)
                 if matching_line:
                     record.cost = matching_line[0].cost
-
-  

@@ -68,6 +68,16 @@
                                 <tree editable="bottom">
                                     <field name="product_id"/>
                                     <field name="quantity"/>
+                                    <field name="cost" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                         <page string="Finished Good">
+                            <field name="finished_good_lines" readonly="state == 'validated'">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
                                     <field name="cost"/>
                                 </tree>
                             </field>
