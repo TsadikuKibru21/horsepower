@@ -1,0 +1,29 @@
+name: Deploy to Odoo Server
+
+on:
+  push:
+    branches:
+      - main  # Run this workflow when pushing to the main branch
+
+jobs:
+  deploy:
+    name: Deploy Custom Addons to Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Execute deployment on remote server
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            echo "🚀 Connecting to server..."
+            cd /opt/custom_addons
+            echo "📂 Pulling latest code from main branch..."
+            git pull origin main
+            echo "✅ Deployment complete!"
