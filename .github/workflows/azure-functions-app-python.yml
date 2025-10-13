@@ -3,28 +3,33 @@ name: Deploy to Odoo Server
 on:
   push:
     branches:
-      - main  # Run this workflow when pushing to the main branch
+      - main
 
 jobs:
-  deploy:
-    name: Deploy Custom Addons to Server
+  deploy-main:
+    name: Deploy to Odoo Production
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Execute deployment on remote server
-        uses: appleboy/ssh-action@v1.1.0
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: ${{ secrets.SERVER_PORT }}
-          script: |
-            echo "🚀 Connecting to server..."
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known hosts
+        run: ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to Odoo server
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} << 'EOF'
+            set -e
+            echo "🚀 Connecting to Odoo server..."
             cd /opt/custom_addons
-            echo "📂 Pulling latest code from main branch..."
+            echo "📂 Pulling latest code from main..."
             git pull origin main
+            echo "🔁 Restarting Odoo service..."
             sudo systemctl restart odoo
             echo "✅ Deployment complete!"
+          EOF
