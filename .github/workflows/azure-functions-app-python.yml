@@ -26,4 +26,5 @@ jobs:
             cd /opt/custom_addons
             echo "📂 Pulling latest code from main branch..."
             git pull origin main
+            sudo systemctl restart odoo
             echo "✅ Deployment complete!"
