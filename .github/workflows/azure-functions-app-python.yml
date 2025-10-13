@@ -31,4 +31,4 @@ jobs:
             git pull origin main
             echo "🔁 Restarting Odoo service..."
             sudo systemctl restart odoo
-            echo "✅ Deployment complete!"
+            echo "✅ Deployment complete.!"
