@@ -9,6 +9,7 @@
     "maintainer": "",
     "website": 'https://www.yourcompany.com',
     "depends": ["base","stock","account"],
+    
     "data": [
     "security/ir.model.access.csv",
     "security/security.xml",
