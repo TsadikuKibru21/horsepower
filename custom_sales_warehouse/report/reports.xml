@@ -10,7 +10,7 @@
 
 
          <field name="print_report_name">
-            (object.state in ('draft', 'sent') or object.amount_total &lt;= object.quotation_print_limit)
+            (object.amount_total &lt;= object.quotation_print_limit and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)
         </field>
         <field name="binding_model_id" eval="False"/>
         <field name="binding_type">report</field>
@@ -23,7 +23,7 @@
             <field name="report_name">sale.report_saleorder</field>
             <field name="report_file">sale.report_saleorder</field>
               <field name="print_report_name">
-            (object.state in ('draft', 'sent') or object.amount_total &lt;= object.quotation_print_limit)
+            (object.amount_total &lt;= object.quotation_print_limit and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)
         </field>
             <field name="binding_model_id" eval="False"/>
             <field name="binding_type">report</field>
