@@ -11,6 +11,11 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit="sale.order.line"
     commission_percent = fields.Float(string='Commission Percent',related="product_id.commission_percent", readonly=False,help='Commission percentage for this product')
+    
+    @api.onchange('commission_percent')
+    def onchange_commission_percent(self):
+        for record in self:
+            record.price_unit = record.price_unit + (record.price_unit * record.commission_percent/100)
 
 
 class ProductProduct(models.Model):

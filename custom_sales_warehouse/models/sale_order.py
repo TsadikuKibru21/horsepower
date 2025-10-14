@@ -1,5 +1,5 @@
-from odoo import models, fields, api
-from odoo.exceptions import UserError
+from odoo import models, fields, api,_
+from odoo.exceptions import UserError,ValidationError
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -39,6 +39,20 @@ class SaleOrder(models.Model):
 
     def action_print_pro_forma(self):
         return self.env.ref('sale.action_report_pro_forma_invoice').report_action(self)
+    
+    quotation_print_limit = fields.Float(
+        string="Quotation Print Limit",
+        compute="_compute_quotation_print_limit",
+        store=False
+    )
+
+    def _compute_quotation_print_limit(self):
+        """Get limit value from system parameter."""
+        limit_value = float(self.env['ir.config_parameter'].sudo().get_param(
+            'custom_sales_warehouse.quotation_print_limit', 0
+        ))
+        for rec in self:
+            rec.quotation_print_limit = limit_value
 
     def action_submit_for_approval(self):
         for order in self:
@@ -81,6 +95,7 @@ class SaleOrder(models.Model):
         _logger.info("Super action_confirm called for orders: %s", self.mapped('name'))
 
         for order in self:
+            order.action_release_products()
             use_custom_flow = False
             purchase_request_lines = []
             
@@ -190,4 +205,64 @@ class SaleOrder(models.Model):
 
         _logger.info("Completed action_confirm for orders: %s", self.mapped('name'))
         return res
+    
+    
+    
+    
+    
+    def _get_sale_location(self):
+        """Helper: get location_id from sale order's warehouse."""
+        self.ensure_one()
+        warehouse = self.warehouse_id
+        if not warehouse or not warehouse.lot_stock_id:
+            raise UserError(_("No stock location found for warehouse %s.") % warehouse.display_name)
+        return warehouse.lot_stock_id.id
+
+    def action_reserve_products(self):
+        """Reserve quantities directly in stock.quant."""
+        for order in self:
+            if order.is_reserved:
+                raise UserError(_("Products are already reserved for this order."))
+
+            location_id = order._get_sale_location()
+
+            for line in order.order_line:
+                product = line.product_id
+                qty = line.product_uom_qty
+
+                quant = self.env['stock.quant'].search([
+                    ('product_id', '=', product.id),
+                    ('location_id', '=', location_id),
+                ], limit=1)
+
+                if quant:
+                    quant.reserved_quantity += qty
+                else:
+                    self.env['stock.quant'].create({
+                        'product_id': product.id,
+                        'location_id': location_id,
+                        'reserved_quantity': qty,
+                    })
+
+
+    def action_release_products(self):
+        """Release reserved quantities from stock.quant."""
+        for order in self:
+            if not order.is_reserved:
+                raise UserError(_("No reserved products found for this order."))
+
+            location_id = order._get_sale_location()
+
+            for line in order.order_line:
+                product = line.product_id
+                qty = line.product_uom_qty
+
+                quant = self.env['stock.quant'].search([
+                    ('product_id', '=', product.id),
+                    ('location_id', '=', location_id),
+                ], limit=1)
+
+                if quant:
+                    new_reserved = quant.reserved_quantity - qty
+                    quant.reserved_quantity = new_reserved if new_reserved > 0 else 0.0
 
