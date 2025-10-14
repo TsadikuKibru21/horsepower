@@ -51,13 +51,13 @@
                 <button name="action_print_quotation_order"
                         type="object"
                         string="Print Quotation/Order"
-                        invisible="state in ['to_approve','draft'] or amount_total <= quotation_print_limit"
+                        invisible="state in ['to_approve','draft'] or amount_total &lt; quotation_print_limit"
                         class="btn btn-primary"
                         icon="fa-print"/>
                 <button name="action_print_pro_forma"
                         type="object"
                         string="Print PRO-FORMA"
-                        invisible="state in ['to_approve','draft'] or amount_total <= quotation_print_limit"
+                        invisible="state in ['to_approve','draft'] or amount_total &lt; quotation_print_limit"
                         class="btn btn-secondary"
                         icon="fa-print"/>
 
