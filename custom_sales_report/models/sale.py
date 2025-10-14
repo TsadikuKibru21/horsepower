@@ -17,7 +17,12 @@ class SaleOrderLine(models.Model):
         for record in self:
             record.price_unit = record.price_unit + (record.price_unit * record.commission_percent/100)
 
-
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        for record in self:
+            if record.product_id and record.commission_percent:
+                # Apply commission to the price_unit set by super
+                record.price_unit = record.price_unit + (record.price_unit * record.commission_percent / 100)
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 

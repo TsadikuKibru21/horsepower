@@ -27,6 +27,13 @@
                  <xpath expr="(//button[@name='button_validate'])[2]" position="attributes">
                             <attribute name="invisible">state in ('waiting', 'assigned', 'done', 'cancel') or not show_validate_button</attribute>
                 </xpath>
+
+                <xpath expr="//field[@name='location_id']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='location_dest_id']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
             </field>
         </record>
 </odoo>

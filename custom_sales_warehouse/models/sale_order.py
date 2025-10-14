@@ -34,6 +34,7 @@ class SaleOrder(models.Model):
         ('cancel', 'Cancelled'),
     ], string='Status', copy=False, tracking=True, default='draft')
     release_from_confirm=fields.Boolean()
+    is_reserved=fields.Boolean()
 
     def action_print_quotation_order(self):
         return self.env.ref('sale.action_report_saleorder').report_action(self)
@@ -244,6 +245,7 @@ class SaleOrder(models.Model):
                         'location_id': location_id,
                         'reserved_quantity': qty,
                     })
+            order.is_reserved=True
 
 
     def action_release_products(self):
@@ -267,4 +269,5 @@ class SaleOrder(models.Model):
                     quant.reserved_quantity = new_reserved if new_reserved > 0 else 0.0
             if not order.release_from_confirm:
                 order.quotation_status="b"
+            order.is_reserved=False
 
