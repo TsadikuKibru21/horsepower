@@ -5,16 +5,11 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-               <xpath expr="//div[@id='sales']/div[@class='app_settings_block']" position="inside">
-                <div class="row mt16 o_setting_box">
-                    <div class="o_setting_left_pane"/>
-                    <div class="o_setting_right_pane">
-                        <label for="quotation_print_limit" string="Quotation Amount Limit To Print without Approve"/>
-                        <div class="content-group">
-                            <field name="quotation_print_limit"/>
-                        </div>
-                    </div>
-                </div>
+               <xpath expr="//setting[@id='discount_sale_order_lines']" position="after">
+                <setting id="quotation_print_limit_setting"
+                         title="Quotation Amount Limit To Print without Approve">
+                    <field name="quotation_print_limit"/>
+                </setting>
             </xpath>
 
         </field>
