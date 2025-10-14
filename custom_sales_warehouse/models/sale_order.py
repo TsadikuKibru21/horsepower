@@ -33,6 +33,7 @@ class SaleOrder(models.Model):
         ('done', 'Locked'),
         ('cancel', 'Cancelled'),
     ], string='Status', copy=False, tracking=True, default='draft')
+    release_from_confirm=fields.Boolean()
 
     def action_print_quotation_order(self):
         return self.env.ref('sale.action_report_saleorder').report_action(self)
@@ -95,6 +96,7 @@ class SaleOrder(models.Model):
         _logger.info("Super action_confirm called for orders: %s", self.mapped('name'))
 
         for order in self:
+            order.release_from_confirm =True
             order.action_release_products()
             use_custom_flow = False
             purchase_request_lines = []
@@ -265,4 +267,6 @@ class SaleOrder(models.Model):
                 if quant:
                     new_reserved = quant.reserved_quantity - qty
                     quant.reserved_quantity = new_reserved if new_reserved > 0 else 0.0
+            if not order.release_from_confirm:
+                order.quotation_status="b"
 
