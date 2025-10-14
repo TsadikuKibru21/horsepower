@@ -80,6 +80,9 @@
                       />
                 <field name="quotation_print_limit" invisible="1"/>
                 <field name="amount_total" invisible="1"/>
+                 <field name="is_reserved" invisible="1"/>
+
+                
                 
             </xpath>
   
