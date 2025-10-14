@@ -223,8 +223,7 @@ class SaleOrder(models.Model):
     def action_reserve_products(self):
         """Reserve quantities directly in stock.quant."""
         for order in self:
-            if order.is_reserved:
-                raise UserError(_("Products are already reserved for this order."))
+       
 
             location_id = order._get_sale_location()
 
@@ -250,8 +249,7 @@ class SaleOrder(models.Model):
     def action_release_products(self):
         """Release reserved quantities from stock.quant."""
         for order in self:
-            if not order.is_reserved:
-                raise UserError(_("No reserved products found for this order."))
+        
 
             location_id = order._get_sale_location()
 
