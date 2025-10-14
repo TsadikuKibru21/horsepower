@@ -79,6 +79,8 @@
                         invisible="state not in ['approved'] or is_reserved == False"
                       />
                 <field name="quotation_print_limit" invisible="1"/>
+                <field name="amount_total" invisible="1"/>
+                
             </xpath>
   
      
