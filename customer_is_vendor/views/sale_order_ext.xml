@@ -6,40 +6,18 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+        
             <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="domain">[('is_customer','=', True), '|', '|', ('company_id','=', company_id), ('company_id', '=', False), ('company_id', 'child_of', company_id)]</attribute>
+                <attribute name="domain">[('is_customer','=', True)]</attribute>
             </xpath>
-        </field>
-    </record>
-
-
-
-    <record id="view_sale_order_form_inherit_tin" model="ir.ui.view">
-        <field name="name">sale.order.form.inherit.tin</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
-        <field name="arch" type="xml">
-            <!-- Add tin_id after partner_id -->
             <xpath expr="//field[@name='partner_id']" position="before">
-            <field name="tin_id" domain="[('partner_id.is_customer','=', True), '|', '|', ('partner_id.company_id','=', company_id), ('partner_id.company_id', '=', False), ('partner_id.company_id', 'child_of', company_id)]" options="{'no_create': True}"/>
+            <field name="tin_id" domain="[('partner_id.is_customer','=', True)]" options="{'no_create': True}"/>
             </xpath>
         </field>
     </record>
 
-    <!-- Inherit Purchase Order Form View -->
-    <record id="view_purchase_order_form_inherit_tin" model="ir.ui.view">
-        <field name="name">purchase.order.form.inherit.tin</field>
-        <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="purchase.purchase_order_form"/>
-        <field name="arch" type="xml">
-            <!-- Add tin_id after partner_id -->
-            <xpath expr="//field[@name='partner_id']" position="before">
-            <field name="tin_id" domain="[('partner_id.is_vendor','=', True), '|', '|', ('partner_id.company_id','=', company_id), ('partner_id.company_id', '=', False), ('partner_id.company_id', 'child_of', company_id)]" options="{'no_create': True}"/>
-            </xpath>
-        </field>
-    </record>
 
-    <!-- Inherit Stock Picking Form View -->
+
     <record id="view_stock_picking_form_inherit_tin" model="ir.ui.view">
         <field name="name">stock.picking.form.inherit.tin</field>
         <field name="model">stock.picking</field>
@@ -53,19 +31,7 @@
         </field>
     </record>
 
-    <!-- Inherit Account Move Form View (Bill/Invoice) -->
-    <record id="view_account_move_form_inherit_tin" model="ir.ui.view">
-        <field name="name">account.move.form.inherit.tin</field>
-        <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_move_form"/>
-        <field name="arch" type="xml">
-            <!-- Add tin_id after partner_id -->
-            <xpath expr="//label[@for='partner_id']" position="before">
-                
-                <field name="tin_id" invisible="move_type == 'entry'" options="{'no_create': True}" domain="[('partner_id.is_customer', '=', True), '|', '|', ('partner_id.company_id','=', company_id), ('partner_id.company_id', '=', False), ('partner_id.company_id', 'child_of', company_id)] if move_type in ('out_invoice', 'out_refund') else [('partner_id.is_vendor', '=', True), '|', '|', ('partner_id.company_id','=', company_id), ('partner_id.company_id', '=', False), ('partner_id.company_id', 'child_of', company_id)]"/>
-            </xpath>
-        </field>
-    </record>
+
 
      <record id="view_account_payment_form_inherit_tin" model="ir.ui.view">
         <field name="name">account.payment.form.inherit.tin</field>
@@ -77,9 +43,9 @@
                 
                 <field name="tin_id" options="{'no_create': True}" domain="[('partner_id.is_customer', '=', True), '|', '|', ('partner_id.company_id','=', company_id), ('partner_id.company_id', '=', False), ('partner_id.company_id', 'child_of', company_id)] if payment_type in ('inbound') else [('partner_id.is_vendor', '=', True), '|', '|', ('partner_id.company_id','=', company_id), ('partner_id.company_id', '=', False), ('partner_id.company_id', 'child_of', company_id)]"/>
             </xpath>
+
         </field>
     </record>
-
 
 
   

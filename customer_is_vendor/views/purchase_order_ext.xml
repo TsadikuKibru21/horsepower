@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-    <record id="form_view_purchase_order_inherit" model="ir.ui.view">
-        <field name="name">axiom_is_customer_is_vendor form_view_purchase_order_inherit</field>
+
+
+    <record id="view_purchase_order_form_inherit_tin" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.tin</field>
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
+            <!-- Add tin_id after partner_id -->
+            <xpath expr="//field[@name='partner_id']" position="before">
+            <field name="tin_id" domain="[('partner_id.is_vendor','=', True)]" options="{'no_create': True}"/>
+            </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
-            <attribute name="domain">[('is_vendor','=', True), '|', '|', ('company_id','=', company_id), ('company_id', '=', False), ('company_id', 'child_of', company_id)]</attribute>
-        </xpath>
+                <attribute name="domain">[('is_vendor','=', True)]</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
