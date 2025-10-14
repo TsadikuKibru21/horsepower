@@ -66,7 +66,7 @@
                         type="object"
                         class="btn-primary"
                         confirm="Are you sure you want to Reserve Product?"
-                        invisible="state in ['to_approve'] or quotation_status != 'a'"
+                        invisible="state in ['to_approve'] or quotation_status == 'a'"
                         groups="custom_sales_warehouse.group_sale_order_approver"
                         />
 
@@ -76,7 +76,7 @@
                         class="btn-secondary"
                         confirm="Are you sure you want to Release Product?"
                         groups="custom_sales_warehouse.group_sale_order_approver"
-                        invisible="state in ['to_approve'] or quotation_status == 'a'"
+                        invisible="state in ['to_approve'] or quotation_status != 'a'"
                       />
             </xpath>
   
