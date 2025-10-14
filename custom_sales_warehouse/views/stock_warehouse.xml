@@ -28,11 +28,11 @@
                             <attribute name="invisible">state in ('waiting', 'assigned', 'done', 'cancel') or not show_validate_button</attribute>
                 </xpath>
 
-                <xpath expr="//field[@name='location_id']" position="attributes">
-                    <attribute name="invisible">0</attribute>
+                  <xpath expr="//field[@name='location_id']" position="replace">
+                    <field name="location_id" readonly="state == 'done'" invisible="picking_type_code != 'incoming'"/>
                 </xpath>
-                <xpath expr="//field[@name='location_dest_id']" position="attributes">
-                    <attribute name="invisible">0</attribute>
+                <xpath expr="//field[@name='location_dest_id']" position="replace">
+                    <field name="location_dest_id" readonly="state == 'done'" invisible="picking_type_code != 'outgoing'"/>
                 </xpath>
             </field>
         </record>
