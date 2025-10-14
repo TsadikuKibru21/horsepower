@@ -78,6 +78,7 @@
                         groups="custom_sales_warehouse.group_sale_order_approver"
                         invisible="state not in ['approved'] or is_reserved == False"
                       />
+                <field name="quotation_print_limit" invisible="1"/>
             </xpath>
   
      
