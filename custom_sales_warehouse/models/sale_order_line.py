@@ -4,7 +4,7 @@ from odoo import api, fields, models
 
 class SaleOrderLine(models.Model):
     _inherit="sale.order.line"
-    sales_from_id = fields.Many2one('sales.from', string='Sales From')
+    sales_from_id = fields.Many2one('sales.from', string='Virtual Stock')
     order_sequence=fields.Char(string="NO")
     default_code = fields.Many2one('product.item.code', string="Item Code",ondelete="cascade")
     
