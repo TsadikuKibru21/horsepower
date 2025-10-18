@@ -128,5 +128,6 @@
 
         <menuitem id="menu_action_advance_payments_receivable" name="Receipt" parent="account.menu_finance_receivables" groups="payment_order.group_advance_payable_submit,payment_order.group_advance_payable_validate" action="action_advance_payment_receivable"/>
         <menuitem id="menu_action_advance_payments_payable" name="Payment" parent="account.menu_finance_payables" groups="payment_order.group_advance_payable_submit,payment_order.group_advance_payable_validate" action="action_advance_payment_payable"/>
+        <menuitem id="menu_action_advance_payments_purchase" name="Payment" parent="store_request.purchase_request_main_menu" groups="payment_order.group_advance_payable_submit,payment_order.group_advance_payable_validate" action="action_advance_payment_payable"/>
 
 </odoo>

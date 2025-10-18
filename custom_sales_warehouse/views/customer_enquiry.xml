@@ -16,7 +16,7 @@
                     <field name="enquiry_ids">
                         <tree editable="bottom">
                              <field name="date"/>
-                            <field name="product_id" options="{'no_create': True}"/>
+                            <field name="product_id" widget="many2many_tags" options="{'no_create': True}"/>
                             <field name="contact"/>
                             
 
@@ -41,7 +41,7 @@
                  <field name="date"/>
                 <field name="partner_id" options="{'no_create': True}"/>
                 <field name="contact"/>
-                <field name="product_id" options="{'no_create': True}"/>
+                <field name="product_id" widget="many2many_tags" options="{'no_create': True}"/>
                  
                  <field name="quotation_status"/>
                 <field name="salesperson_id" readonly="1"/>
@@ -66,7 +66,7 @@
                     
                 </group>
                 <group>
-                <field name="product_id" options="{'no_create': True}"/>
+                <field name="product_id"  options="{'no_create': True}"/>
                    
                     <field name="quotation_status"/>
                     <field name="salesperson_id" readonly="1"/>
