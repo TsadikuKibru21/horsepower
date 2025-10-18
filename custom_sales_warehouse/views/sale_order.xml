@@ -111,6 +111,11 @@
             <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="attributes">
                         <attribute name="readonly">1</attribute>
                 </xpath>
+            
+              <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom']" position="after">
+                        <field name="product_cost" groups="custom_sales_warehouse.group_sale_cost_admin" readonly="state in ['sale','done']"/>
+            </xpath>
+            
 
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="team" readonly="1"/>

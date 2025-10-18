@@ -18,6 +18,15 @@ class ResPartner(models.Model):
       
         if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_contact_manager"):
                 raise AccessError(_("You are not allowed to Create Contact."))
+        if 'name' in vals and vals['name']:
+            if len(vals['name']) > 30:
+                raise ValidationError(_("Product name text length should be <= 30 characters."))
+
+        # Validate default_code (item code)
+        if 'default_code' in vals and vals['default_code']:
+            if len(vals['default_code']) > 20:
+                raise ValidationError(_("Product/item code is missing or exceeds 20 characters."))
+
         res = super().create(vals)
        
         return res
@@ -33,6 +42,16 @@ class ResPartner(models.Model):
                 if not set(vals.keys()).issubset(allowed_fields):
                 
                     raise AccessError(_("You are not allowed to Update Contact."))
+        if 'name' in vals and vals['name']:
+            if len(vals['name']) > 30:
+                raise ValidationError(_("Product name text length should be <= 30 characters."))
+
+        # Validate default_code (item code)
+        if 'default_code' in vals and vals['default_code']:
+            if len(vals['default_code']) > 20:
+                raise ValidationError(_("Product/item code is missing or exceeds 20 characters."))
+
+        
         res = super().write(vals)
        
         return res
@@ -50,6 +69,15 @@ class ProductTemplate(models.Model):
     def create(self, vals):
         if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_product_manager"):
             raise AccessError(_("You are not allowed to create products."))
+        if 'name' in vals and vals['name']:
+            if len(vals['name']) > 30:
+                raise ValidationError(_("Product name text length should be <= 30 characters."))
+
+        # Validate default_code (item code)
+        if 'default_code' in vals and vals['default_code']:
+            if len(vals['default_code']) > 20:
+                raise ValidationError(_("Product/item code is missing or exceeds 20 characters."))
+
         return super().create(vals)
 
     def write(self, vals):
@@ -62,6 +90,15 @@ class ProductTemplate(models.Model):
         if self.env.user.id != 1 and not self.env.user.has_group("custom_sales_warehouse.group_product_manager"):
             if not set(vals.keys()).issubset(allowed_fields):
                 raise AccessError(_("You are not allowed to modify products."))
+        if 'name' in vals and vals['name']:
+            if len(vals['name']) > 30:
+                raise ValidationError(_("Product name text length should be <= 30 characters."))
+
+        # Validate default_code (item code)
+        if 'default_code' in vals and vals['default_code']:
+            if len(vals['default_code']) > 20:
+                raise ValidationError(_("Product/item code is missing or exceeds 20 characters."))
+
         return super().write(vals)
 
     def unlink(self):

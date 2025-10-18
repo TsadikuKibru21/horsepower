@@ -44,6 +44,8 @@
                             <page name="request_lines" string="Request Lines">
                                 <field name="request_lines" readonly="state != 'draft'">
                                     <tree editable="bottom">
+                                    
+                                        <field name="order_sequence"/>
                                         <field name="vendor" options="{'no_create': True}"/>
                                         <field name="product_id" options="{'no_create': True}" readonly="parent.state not in  ['draft']"/>
                                         

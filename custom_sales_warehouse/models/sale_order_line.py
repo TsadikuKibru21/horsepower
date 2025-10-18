@@ -8,7 +8,7 @@ class SaleOrderLine(models.Model):
     order_sequence=fields.Char(string="NO")
     default_code = fields.Many2one('product.item.code', string="Item Code",ondelete="cascade")
     
-   
+    product_cost=fields.Float(string="Cost",related="product_id.standard_price")
     
     @api.model
     def create(self, vals):

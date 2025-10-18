@@ -29,5 +29,7 @@
      <record id="group_product_manager" model="res.groups">
             <field name="name">Product Manager/Creator</field>
         </record>
-
+    <record id="group_sale_cost_admin" model="res.groups">
+            <field name="name">Sale Cost Admin</field>
+        </record>
 </odoo>

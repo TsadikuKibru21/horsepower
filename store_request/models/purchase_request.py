@@ -108,6 +108,7 @@ class PurchaseRequest(models.Model):
             'ref': self.name,
             'partner_id': self.vendor_id.id,
             'order_line': [(0, 0, {
+                'order_sequence':line.order_sequence,
                 'product_id': line.product_id.id,
                 'product_qty': line.quantity,
                 'price_unit': line.unit_price,
@@ -121,6 +122,8 @@ class PurchaseRequestLine(models.Model):
     _description = 'Purchase Request Line'
 
     request_id = fields.Many2one('purchase.request', string='Purchase Request')
+    order_sequence=fields.Char(string="NO")
+
     product_id = fields.Many2one('product.product', string='Product', required=True)
     quantity = fields.Float(string='Quantity', required=True)
     sales_price= fields.Float(stiring="Sales Price", related="product_id.list_price")

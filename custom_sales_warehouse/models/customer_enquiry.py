@@ -7,7 +7,7 @@ class CustomerEnquiry(models.Model):
 
 
     partner_id = fields.Many2one('res.partner', string='Customer', required=True, ondelete='cascade')
-    product_id = fields.Many2one('product.product', string='Product', required=True)
+    product_id = fields.Many2many('product.product', string='Product', required=True)
     optional_product=fields.Char(string="Optional Product")
     quantity=fields.Float(string="Quantity")
     date = fields.Date(string='Date', default=fields.Date.today, required=True)

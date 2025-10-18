@@ -63,9 +63,10 @@ class CustomerEnquiryWizard(models.Model):
         enquiries = self.env['customer.enquiry'].search(domain)
         row = 3
         for enquiry in enquiries:
+            product_names = ', '.join(enquiry.product_id.mapped('name'))
             sheet.write(row, 0, enquiry.date, date_style)
             sheet.write(row, 1, enquiry.partner_id.name or '', text_style)
-            sheet.write(row, 2, enquiry.product_id.name or '', text_style)
+            sheet.write(row, 2, product_names or '', text_style)
             sheet.write(row, 3, enquiry.contact or '', text_style)
             sheet.write(row, 4, enquiry.quotation_status or '', text_style)
            

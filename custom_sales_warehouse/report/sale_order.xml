@@ -46,7 +46,17 @@
                 <td class="text-start">
                     <span t-field="line.product_id.name"/>
                 </td>
-            </xpath>
+        </xpath>
+
+        <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/thead/tr/th[@name='th_quantity']" position="before">
+                <th class="text-start">UOM</th>
+        </xpath>
+
+        <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/tbody//td[@name='td_quantity']" position="before">
+                <td class="text-start">
+                    <span t-field="line.product_uom.name"/>
+                </td>
+        </xpath>
 
         <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/thead/tr/th[@name='th_taxes']" position="replace"/>
                
