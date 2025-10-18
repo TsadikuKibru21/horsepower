@@ -3,7 +3,15 @@
     <data>
         <!-- Inherit Sale Order Report Template -->
         <template id="report_saleorder_document_inherit_sales_from" inherit_id="sale.report_saleorder_document">
-           
+              <xpath expr="//h2[@class='mt-4']" position="replace">
+                    <h2 class="mt-4">
+                        <span t-if="env.context.get('proforma', False) or is_pro_forma">Pro-Forma Invoice # </span>
+                        
+                        <span t-elif="doc.state in ['draft', 'sent','to_approve','approved']">Quotation # </span>
+                        <span t-elif="doc.state == 'sale'">Order # </span>
+                        <span t-field="doc.name">SO0000</span>
+                    </h2>
+                </xpath>
 
             <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/thead//th[descendant::span[text()='Amount']]" position="replace">
                 <th name="th_amount_total" class="text-end">
