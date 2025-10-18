@@ -8,7 +8,7 @@
             
             
              <xpath expr="//field[@name='sale_order_template_id']" position="after">
-                <field name="sale_type" readonly="state in ['sale','done']"/>
+                <field name="sale_type" required="1" readonly="state in ['sale','done']"/>
             </xpath>
 
             

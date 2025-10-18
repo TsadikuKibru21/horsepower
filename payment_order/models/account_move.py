@@ -52,7 +52,7 @@ class SaleOrder(models.Model):
     sale_type = fields.Selection([
         ('credit_sales', 'Credit Sales'),
         ('cash_sales', 'Cash Sales'),
-    ], string='Sale Type', default=False)
+    ], string='Payment Mode', default=False)
     
     def _prepare_invoice(self):
         """Extend to pass sale_type to invoice_type"""
