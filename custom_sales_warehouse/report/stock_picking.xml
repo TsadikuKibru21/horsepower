@@ -52,7 +52,7 @@
 
         <xpath expr="//td[span[@t-field='ml.product_id.display_name']]" position="before">
             <td name="td_item_code">
-                <span t-field="ml.move_id.default_code.default_code or ''"/>
+                <span t-field="ml.default_code.default_code or ''"/>
             </td>
         </xpath>
 
