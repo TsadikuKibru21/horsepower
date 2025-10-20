@@ -154,13 +154,64 @@ class MonthlySalesReportWizard(models.TransientModel):
                 no += 1
                 row += 1
 
-        # Totals
+        # Totals for sales
         sheet.merge_range(row, 0, row, 6, 'Total', bold_text)
         sheet.write(row, 6, total_sales_all, number_style)
         sheet.write(row, 9, total_profit_all, number_style)
+        row += 2
+
+        # Uncollected Goods Table
+        sheet.merge_range(row, 0, row, 10, 'Uncollected Goods', status_header)
+        row += 1
+        for col, header in enumerate(headers):
+            sheet.write(row, col, header, header_style)
+        row += 1
+
+        total_uncollected_goods = 0.0
+        total_profit_goods = 0.0
+        no = 1
+
+        undelivered_domain = line_domain + [('qty_delivered', '<', 'product_uom_qty')]
+        undelivered_lines = self.env['sale.order.line'].search(undelivered_domain, order='create_date')
+        for line in undelivered_lines:
+            pending_qty = line.product_uom_qty - line.qty_delivered
+            pending_total = line.price_subtotal * (pending_qty / line.product_uom_qty) if line.product_uom_qty else 0.0
+            commission = pending_total * ((line.commission_percent or 0.0) / 100.0)
+            cost = pending_qty * (line.product_id.standard_price or 0.0)
+            profit = pending_total - cost
+            sheet.write(row, 0, no, text_style)
+            sheet.write(row, 1, line.order_id.partner_id.name or '', text_style)
+            sheet.write(row, 2, line.product_id.name or '', text_style)
+            sheet.write(row, 3, line.product_uom.name or '', text_style)
+            sheet.write(row, 4, pending_qty, number_style)
+            sheet.write(row, 5, line.price_unit, number_style)
+            sheet.write(row, 6, pending_total, number_style)
+            sheet.write(row, 7, commission, number_style)
+            sheet.write(row, 8, cost, number_style)
+            sheet.write(row, 9, profit, number_style)
+            sheet.write(row, 10, '', text_style)
+            total_uncollected_goods += pending_total
+            total_profit_goods += profit
+            no += 1
+            row += 1
+
+        # Total for uncollected goods
+        sheet.merge_range(row, 0, row, 6, 'Total Uncollected Goods', bold_text)
+        sheet.write(row, 6, total_uncollected_goods, number_style)
+        sheet.write(row, 9, total_profit_goods, number_style)
         row += 3
 
-        # Gross uncollected cash
+        # Uncollected Cash Table
+        sheet.merge_range(row, 0, row, 10, 'Uncollected Cash', status_header)
+        row += 1
+        for col, header in enumerate(headers):
+            sheet.write(row, col, header, header_style)
+        row += 1
+
+        total_uncollected_cash_table = 0.0
+        total_profit_cash = 0.0
+        no = 1
+
         invoice_domain = [
             ('move_type', '=', 'out_invoice'),
             ('state', '=', 'posted'),
@@ -175,9 +226,51 @@ class MonthlySalesReportWizard(models.TransientModel):
             sale_orders = self.env['sale.order'].search(so_domain)
             invoice_ids = sale_orders.mapped('invoice_ids').ids
             invoice_domain.append(('id', 'in', invoice_ids))
-        uncollected_cash = sum(self.env['account.move'].search(invoice_domain).mapped('amount_residual'))
+        unpaid_invoices = self.env['account.move'].search(invoice_domain, order='invoice_date')
 
+        for inv in unpaid_invoices:
+            if inv.amount_total == 0:
+                continue
+            residual_ratio = inv.amount_residual / inv.amount_total
+            for iline in inv.invoice_line_ids:
+                if not iline.product_id:
+                    continue
+                sale_line = iline.sale_line_ids[:1]
+                commission_percent = sale_line.commission_percent if sale_line else 0.0
+                client = inv.partner_id.name or ''
+                product_name = iline.product_id.name or ''
+                unit = iline.product_uom_id.name or ''
+                qty = iline.quantity * residual_ratio
+                unit_price = iline.price_unit
+                total_price = iline.price_subtotal * residual_ratio
+                commission = total_price * (commission_percent / 100.0)
+                cost = qty * (iline.product_id.standard_price or 0.0)
+                profit = total_price - cost
+                remark = ''
+                sheet.write(row, 0, no, text_style)
+                sheet.write(row, 1, client, text_style)
+                sheet.write(row, 2, product_name, text_style)
+                sheet.write(row, 3, unit, text_style)
+                sheet.write(row, 4, qty, number_style)
+                sheet.write(row, 5, unit_price, number_style)
+                sheet.write(row, 6, total_price, number_style)
+                sheet.write(row, 7, commission, number_style)
+                sheet.write(row, 8, cost, number_style)
+                sheet.write(row, 9, profit, number_style)
+                sheet.write(row, 10, remark, text_style)
+                total_uncollected_cash_table += total_price
+                total_profit_cash += profit
+                no += 1
+                row += 1
+
+        # Total for uncollected cash
+        sheet.merge_range(row, 0, row, 6, 'Total Uncollected Cash', bold_text)
+        sheet.write(row, 6, total_uncollected_cash_table, number_style)
+        sheet.write(row, 9, total_profit_cash, number_style)
         row += 3
+
+        # Gross uncollected cash (exact, including tax)
+        uncollected_cash = sum(self.env['account.move'].search(invoice_domain).mapped('amount_residual'))
 
         # Executive Summary
         summary_row = row
