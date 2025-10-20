@@ -56,6 +56,17 @@
                 </td>
         </xpath>
 
+        <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/tbody//td[@name='td_quantity']" position="replace">
+                <td name="td_quantity" class="text-end">
+                    <span t-field="line.product_uom_qty">3</span>
+                    <span t-if="line.product_packaging_id">
+                        (<span t-field="line.product_packaging_qty" t-options="{&quot;widget&quot;: &quot;integer&quot;}"/> <span t-field="line.product_packaging_id"/>)
+                    </span>
+                </td>
+        </xpath>
+
+      
+
         <xpath expr="//table[@class='table table-sm o_main_table table-borderless mt-4']/thead/tr/th[@name='th_quantity']" position="before">
                 <th class="text-start">UOM</th>
         </xpath>

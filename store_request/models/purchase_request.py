@@ -23,6 +23,7 @@ class PurchaseRequest(models.Model):
 
     purchase_order_count = fields.Integer(string='Purchase Order Count', compute='_compute_purchase_order_count')
 
+    sale_order=fields.Many2one('sale.order',string="Request From")
 
 
    

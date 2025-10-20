@@ -22,7 +22,7 @@
         'views/stock_move.xml',
         'views/res_partner.xml',
         'views/account_move.xml',
-        'views/purchase_request.xml',
+        # 'views/purchase_request.xml',
         'views/res_config_settings_view.xml',
         'report/reports.xml',
         'report/sale_order.xml',
