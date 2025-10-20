@@ -51,7 +51,7 @@
         <!-- Add Item Code cell before Product cell in each row (use @t-as for reliable selection) -->
         <xpath expr="//tr[@t-as='ml']/td[1]" position="before">
             <td name="td_default_code">
-                <span t-field="ml.move_id.default_code.name" t-options="{'widget': 'char'}"/>
+                <span t-field="ml.move_id.default_code.default_code" t-options="{'widget': 'char'}"/>
             </td>
         </xpath>
 
