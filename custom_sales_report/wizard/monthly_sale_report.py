@@ -171,8 +171,7 @@ class MonthlySalesReportWizard(models.TransientModel):
         total_profit_goods = 0.0
         no = 1
 
-        undelivered_domain = line_domain + [('qty_delivered', '<', 'product_uom_qty')]
-        undelivered_lines = self.env['sale.order.line'].search(undelivered_domain, order='create_date')
+        undelivered_lines = sale_lines.filtered(lambda l: l.qty_delivered < l.product_uom_qty)
         for line in undelivered_lines:
             pending_qty = line.product_uom_qty - line.qty_delivered
             pending_total = line.price_subtotal * (pending_qty / line.product_uom_qty) if line.product_uom_qty else 0.0
