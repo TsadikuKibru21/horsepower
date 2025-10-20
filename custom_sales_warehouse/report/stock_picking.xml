@@ -25,4 +25,80 @@
             </div>
         </xpath>
     </template>
+
+    <template id="stock_report_picking_inherit" inherit_id="stock.report_picking">
+        <!-- Add Item Code column header before Product -->
+        <xpath expr="//table[1]//th[@name='th_product']" position="before">
+            <th name="th_default_code">
+                <strong>Item Code</strong>
+            </th>
+        </xpath>
+
+        <!-- Always show From header -->
+        <xpath expr="//table[1]//th[@name='th_from']" position="replace">
+            <th name="th_from" align="left" groups="stock.group_stock_multi_locations">
+                <strong>From</strong>
+            </th>
+        </xpath>
+
+        <!-- Always show To header -->
+        <xpath expr="//table[1]//th[@name='th_to']" position="replace">
+            <th name="th_to" groups="stock.group_stock_multi_locations">
+                <strong>To</strong>
+            </th>
+        </xpath>
+
+        <!-- Add Item Code cell before Product cell in each row -->
+        <xpath expr="//tr[t-foreach='o.move_line_ids_without_package.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))']//td[1]" position="before">
+            <td name="td_default_code">
+                <span t-field="ml.move_id.default_code.name"/>
+            </td>
+        </xpath>
+
+        <!-- Always show From cell -->
+        <xpath expr="//tr[t-foreach='o.move_line_ids_without_package.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))']//td[span[@t-esc='ml.location_id.display_name']]" position="replace">
+            <td groups="stock.group_stock_multi_locations">
+                <span t-esc="ml.location_id.display_name">WH/Stock</span>
+                <t t-if="ml.package_id">
+                    <span t-field="ml.package_id">Package A</span>
+                </t>
+            </td>
+        </xpath>
+
+        <!-- Always show To cell -->
+        <xpath expr="//tr[t-foreach='o.move_line_ids_without_package.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))']//td[span[@t-field='ml.location_dest_id']]" position="replace">
+            <td groups="stock.group_stock_multi_locations">
+                <div>
+                    <span t-field="ml.location_dest_id">WH/Outgoing</span>
+                    <t t-if="ml.result_package_id">
+                        <span t-field="ml.result_package_id">Package B</span>
+                    </t>
+                </div>
+            </td>
+        </xpath>
+
+        <!-- Always show From header in package table -->
+        <xpath expr="//table[2]//th[@name='th_pko_from']" position="replace">
+            <th name="th_pko_from" groups="stock.group_stock_multi_locations">From</th>
+        </xpath>
+
+        <!-- Always show To header in package table -->
+        <xpath expr="//table[2]//th[@name='th_pki_from']" position="replace">
+            <th name="th_pki_from" groups="stock.group_stock_multi_locations">To</th>
+        </xpath>
+
+        <!-- Always show From cell in package table -->
+        <xpath expr="//table[2]//tr[t-foreach='o.package_level_ids.sorted(key=lambda p: p.package_id.name)']//td[span[@t-field='package.location_id']]" position="replace">
+            <td groups="stock.group_stock_multi_locations">
+                <span t-field="package.location_id"/>
+            </td>
+        </xpath>
+
+        <!-- Always show To cell in package table -->
+        <xpath expr="//table[2]//tr[t-foreach='o.package_level_ids.sorted(key=lambda p: p.package_id.name)']//td[span[@t-field='package.location_dest_id']]" position="replace">
+            <td groups="stock.group_stock_multi_locations">
+                <span t-field="package.location_dest_id"/>
+            </td>
+        </xpath>
+    </template>
 </odoo>
