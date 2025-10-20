@@ -19,6 +19,7 @@
         'views/stock_route.xml',
         'views/sales_from.xml',
         'views/stock_warehouse.xml',
+        'views/stock_move.xml',
         'views/res_partner.xml',
         'views/account_move.xml',
         'views/purchase_request.xml',
