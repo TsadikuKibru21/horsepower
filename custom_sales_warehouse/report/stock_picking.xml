@@ -1,78 +1,24 @@
 <odoo>
     <template id="report_deliveryslip_document_inherit_signature" inherit_id="stock.report_delivery_document">
-    <xpath expr="//table[1]//th[@name='th_product']" position="before">
+    <xpath expr="//table[1]//th[@name='th_sm_product']" position="before">
             <th name="th_default_code">
                 <strong>Item Code</strong>
             </th>
         </xpath>
 
-        <!-- Always show From header (remove t-if condition) -->
-        <xpath expr="//table[1]//th[@name='th_from']" position="replace">
-            <th name="th_from" align="left" groups="stock.group_stock_multi_locations">
-                <strong>From</strong>
+        <xpath expr="//table[1]//th[@name='th_sm_product']" position="before">
+            <th name="th_default_code">
+                <strong>Item Code</strong>
             </th>
         </xpath>
 
-        <!-- Always show To header (remove t-if condition) -->
-        <xpath expr="//table[1]//th[@name='th_to']" position="replace">
-            <th name="th_to" groups="stock.group_stock_multi_locations">
-                <strong>To</strong>
-            </th>
-        </xpath>
-
-        <!-- Add Item Code cell before Product cell in each row -->
-        <xpath expr="//tr[@t-as='ml']/td[1]" position="before">
+        <xpath expr="//tr[@t-as='move' or @t-as='bo_line']/td[1]" position="before">
             <td name="td_default_code">
-                <span t-field="ml.move_id.default_code.name" t-options="{'widget': 'char'}"/>
+                <span t-field="move.default_code.default_code" t-options="{'widget': 'char'}"/>
             </td>
         </xpath>
 
-        <!-- Always show From cell (target the existing From td and remove t-if) -->
-        <xpath expr="//tr[@t-as='ml']//td[.//span[@t-esc='ml.location_id.display_name']]" position="replace">
-            <td groups="stock.group_stock_multi_locations">
-                <span t-esc="ml.location_id.display_name"/>
-                <t t-if="ml.package_id">
-                    <span t-field="ml.package_id"/>
-                </t>
-            </td>
-        </xpath>
-
-        <!-- Always show To cell (target the existing To td and remove t-if) -->
-        <xpath expr="//tr[@t-as='ml']//td[.//span[@t-field='ml.location_dest_id']]" position="replace">
-            <td groups="stock.group_stock_multi_locations">
-                <div>
-                    <span t-field="ml.location_dest_id"/>
-                    <t t-if="ml.result_package_id">
-                        <span t-field="ml.result_package_id"/>
-                    </t>
-                </div>
-            </td>
-        </xpath>
-
-        <!-- Always show From header in package table -->
-        <xpath expr="//table[hasclass('table') and position()=2]//th[@name='th_pko_from']" position="replace">
-            <th name="th_pko_from" groups="stock.group_stock_multi_locations">From</th>
-        </xpath>
-
-        <!-- Always show To header in package table -->
-        <xpath expr="//table[hasclass('table') and position()=2]//th[@name='th_pki_from']" position="replace">
-            <th name="th_pki_from" groups="stock.group_stock_multi_locations">To</th>
-        </xpath>
-
-        <!-- Always show From cell in package table -->
-        <xpath expr="//table[hasclass('table') and position()=2]//tr[@t-as='package']//td[.//span[@t-field='package.location_id']]" position="replace">
-            <td groups="stock.group_stock_multi_locations">
-                <span t-field="package.location_id"/>
-            </td>
-        </xpath>
-
-        <!-- Always show To cell in package table -->
-        <xpath expr="//table[hasclass('table') and position()=2]//tr[@t-as='package']//td[.//span[@t-field='package.location_dest_id']]" position="replace">
-            <td groups="stock.group_stock_multi_locations">
-                <span t-field="package.location_dest_id"/>
-            </td>
-        </xpath>
-
+       
       <xpath expr="//div[@class='page']" position="inside">
             <div class="row mt48">
                 <table class="table table-borderless" style="width:100%; margin-top:50px;">
