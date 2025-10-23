@@ -45,7 +45,7 @@
                     <tr>
                         <td style="width: 33%; text-align: center;">
                             <strong>Prepared By</strong><br/>
-                            <span t-esc="o.create_uid.name ''"/>
+                            <span t-esc="o.create_uid.name"/>
                         </td>
                         <td style="width: 33%; text-align: center;">
                             <strong>Checked By</strong><br/>
