@@ -31,6 +31,14 @@
 
                 <widget name="web_ribbon" title="Checked" bg_color="text-bg-success" invisible="is_checked == False or state != 'draft'"/>
             </xpath>
+
+             <xpath expr="//header//button[@name='button_draft']" position="attributes">
+                <attribute name="groups">custom_sales_warehouse.group_account_reset_to_draft</attribute>
+            </xpath>
+
+             <xpath expr="//header/button[@name='%(account.action_view_account_move_reversal)d']" position="attributes">
+                    <attribute name="groups">custom_sales_warehouse.group_account_reverse_entry</attribute>
+            </xpath>
            
         </field>
     </record>

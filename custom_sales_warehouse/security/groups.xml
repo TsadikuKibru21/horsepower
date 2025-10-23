@@ -32,4 +32,13 @@
     <record id="group_sale_cost_admin" model="res.groups">
             <field name="name">Sale Cost Admin</field>
         </record>
+    
+     <record id="group_account_reset_to_draft" model="res.groups">
+            <field name="name">Reset to Draft</field>
+            <field name="category_id" ref="base.module_category_accounting"/>
+        </record>
+        <record id="group_account_reverse_entry" model="res.groups">
+            <field name="name">Reverse Entry</field>
+            <field name="category_id" ref="base.module_category_accounting"/>
+        </record>
 </odoo>
