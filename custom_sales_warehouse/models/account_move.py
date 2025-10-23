@@ -70,7 +70,8 @@ class AccountMove(models.Model):
         
         for record in self:
             record.is_checked=False
-            record.checked_by=self.env.user.id
+            record.approved_by=self.env.user.id
+            
         
        
         
@@ -79,3 +80,4 @@ class AccountMove(models.Model):
     def action_check(self):
         for record in self:
             record.is_checked=True
+            record.checked_by=self.env.user.id
