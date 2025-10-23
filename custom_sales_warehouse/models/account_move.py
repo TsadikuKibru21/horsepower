@@ -57,3 +57,25 @@ class AccountMoveLine(models.Model):
             self.default_code = self.product_id.item_code_id
         else:
             self.default_code = False
+
+class AccountMove(models.Model):
+    _inherit="account.move"
+    
+    is_checked=fields.Boolean(string="Checked")
+    checked_by=fields.Many2one('res.users',string="Checked By")
+    approved_by=fields.Many2one('res.users',string="Approved By")
+    
+    def action_post(self):
+        res=super(AccountMove,self).action_post()
+        
+        for record in self:
+            record.is_checked=False
+            record.checked_by=self.env.user.id
+        
+       
+        
+        return res
+    
+    def action_check(self):
+        for record in self:
+            record.is_checked=True

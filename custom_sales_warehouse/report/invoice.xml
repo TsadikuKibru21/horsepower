@@ -44,16 +44,16 @@
                 <table class="table table-sm table-borderless" style="width:100%;">
                     <tr>
                         <td style="width: 33%; text-align: center;">
-                            <strong>Ordered By</strong><br/>
-                            <span t-esc="o.invoice_origin and o.env['sale.order'].sudo().search([('name', '=', o.invoice_origin)], limit=1).user_id.name or ''"/>
+                            <strong>Prepared By</strong><br/>
+                            <span t-esc="o.create_uid.name ''"/>
                         </td>
                         <td style="width: 33%; text-align: center;">
-                            <strong>Invoice Created By</strong><br/>
-                            <span t-esc="o.create_uid.name"/>
+                            <strong>Checked By</strong><br/>
+                            <span t-esc="o.checked_by.name"/>
                         </td>
                         <td style="width: 33%; text-align: center;">
-                            <strong>Confirmed By</strong><br/>
-                            <span t-esc="o.user_id.name"/>
+                            <strong>Approved By</strong><br/>
+                            <span t-esc="o.approved_by.name"/>
                         </td>
                     </tr>
                 </table>
