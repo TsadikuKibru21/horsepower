@@ -29,20 +29,20 @@ class PhysicalCountLine(models.Model):
     )
     remark = fields.Text(string='Remark')
     
-    @api.onchange('default_code')
-    def _onchange_default_code(self):
-        if self.default_code:
-            self.product_id = self.default_code.product_id
+    @api.onchange('item_code')
+    def _onchange_item_code(self):
+        if self.item_code:
+            self.product_id = self.item_code.product_id
         else:
             self.product_id = False
-            self.default_code = False
+            self.item_code = False
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
-            self.default_code = self.product_id.item_code_id
+            self.item_code = self.product_id.item_code_id
         else:
-            self.default_code = False
+            self.item_code = False
 
     @api.depends('product_id', 'location_id')
     def _compute_on_hand_qty(self):
