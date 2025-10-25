@@ -41,5 +41,15 @@
             sequence="60"
             action="action_physical_count_line"
             groups="stock_physical_count.group_physical_count_user"/>
+
+            <menuitem
+            id="stock.menu_action_inventory_tree"
+            name="Physical Adjustment"
+            parent="stock.menu_stock_adjustments"
+            sequence="50"
+            action="stock.action_view_inventory_tree"
+            groups="stock_physical_count.group_physical_adjustoment_user"/>
+
+            
     </data>
 </odoo>

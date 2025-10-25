@@ -5,5 +5,9 @@
             <field name="name">Physical Count User</field>
             <field name="category_id" ref="base.module_category_inventory"/>
         </record>
+        <record id="group_physical_adjustoment_user" model="res.groups">
+            <field name="name">Physical Adjustment User</field>
+            <field name="category_id" ref="base.module_category_inventory"/>
+        </record>
     </data>
 </odoo>
