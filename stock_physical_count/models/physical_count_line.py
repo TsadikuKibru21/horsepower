@@ -5,7 +5,8 @@ class PhysicalCountLine(models.Model):
     _description = 'Physical Count Line'
     _order = 'product_id, location_id'
 
-    item_code = fields.Char(string='Item Code', required=True)
+    item_code = fields.Many2one('product.item.code', string="Item Code",ondelete="cascade")
+    
     product_id = fields.Many2one('product.product', string='Product', required=True)
     location_id = fields.Many2one('stock.location', string='Location', required=True)
     on_hand_qty = fields.Float(
@@ -27,15 +28,31 @@ class PhysicalCountLine(models.Model):
         help="On Hand Quantity - (Counted Quantity + Consignment Out + Project Out + Damaged)"
     )
     remark = fields.Text(string='Remark')
+    
+    @api.onchange('default_code')
+    def _onchange_default_code(self):
+        if self.default_code:
+            self.product_id = self.default_code.product_id
+        else:
+            self.product_id = False
+            self.default_code = False
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id:
+            self.default_code = self.product_id.item_code_id
+        else:
+            self.default_code = False
 
     @api.depends('product_id', 'location_id')
     def _compute_on_hand_qty(self):
         for record in self:
             if record.product_id and record.location_id:
-                record.on_hand_qty = record.product_id.with_context(
-                    location=record.location_id.id,
-                    warehouse=record.location_id.get_warehouse().id if record.location_id.get_warehouse() else False
-                ).qty_available
+                on_hand_qty = self.env['stock.quant'].search([
+                    ('product_id','=',record.product_id.id),
+                    ('location_id','=',record.location_id.id),
+                ],limit=1)
+                record.on_hand_qty=on_hand_qty.inventory_quantity_auto_apply
             else:
                 record.on_hand_qty = 0.0
 
