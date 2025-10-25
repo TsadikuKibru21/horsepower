@@ -35,6 +35,10 @@ class SaleOrder(models.Model):
     ], string='Status', copy=False, tracking=True, default='draft')
     release_from_confirm=fields.Boolean()
     is_reserved=fields.Boolean()
+    
+    have_waranty=fields.Boolean(string="Have Waranty")
+    
+    waranty_expiration_date = fields.Date(string="Expiration Date")
 
     def action_print_quotation_order(self):
         return self.env.ref('sale.action_report_saleorder').report_action(self)

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_physical_count_line_tree" model="ir.ui.view">
+            <field name="name">physical.count.line.tree</field>
+            <field name="model">physical.count.line</field>
+            <field name="arch" type="xml">
+                <tree string="Physical Count Lines" editable="bottom">
+                    <field name="item_code"/>
+                    <field name="product_id" options="{'no_create': True}"/>
+                    <field name="location_id" options="{'no_create': True}"/>
+                    <field name="on_hand_qty" sum="Total On Hand"/>
+                    <field name="counted_qty" sum="Total Counted"/>
+                    <field name="consignment_out" sum="Total Consignment Out"/>
+                    <field name="project_out" sum="Total Project Out"/>
+                    <field name="damaged" sum="Total Damaged"/>
+                    <field name="difference" sum="Total Difference"/>
+                    <field name="remark"/>
+                </tree>
+            </field>
+        </record>
+
+    
+        <record id="action_physical_count_line" model="ir.actions.act_window">
+            <field name="name">Physical Count Lines</field>
+            <field name="res_model">physical.count.line</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new physical count line to start tracking inventory counts.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu (optional, for easy access) -->
+        <menuitem
+            id="menu_physical_count_root"
+            name="Physical Count"
+            parent="stock.menu_stock_adjustments"
+            sequence="60"
+            action="action_physical_count_line"
+            groups="stock_physical_count.group_physical_count_user"/>
+    </data>
+</odoo>

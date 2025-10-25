@@ -73,12 +73,12 @@
                         <field name="date" readonly="state in ['validated']"/>
                         <field name="available_journal_ids" invisible="1"/>
                         
-                        <field name="journal_id" readonly="state == 'validated'"/>
+                        <field name="journal_id" invisible="state in ['draft']" readonly="state == 'validated'"/>
                         <field name="ft" invisible="advance_type == 'send'" readonly="state == 'validated'"/>
-                        <field name="memo" invisible="advance_type == 'receive'" readonly="state == 'validated'"/>
+                        <field name="memo" invisible="advance_type == 'receive' or state in ['draft']" readonly="state == 'validated'"/>
                         <field name="pay_to" invisible="advance_type == 'receive'" readonly="state == 'validated'"/>
                         <field name="description" readonly="state == 'validated'"/>
-                        <field name="payment_code" readonly="state == 'validated'"/>
+                        <field name="payment_code" nvisible="state in ['draft']" readonly="state == 'validated'"/>
                         <field name="cheque_no" invisible="payment_code != 'cheque'" readonly="state == 'validated'"/>
 
                         <field name="cpo_no" invisible="payment_code != 'cpo'" readonly="state == 'validated'"/>

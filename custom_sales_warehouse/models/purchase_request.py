@@ -30,6 +30,7 @@ class PurchaseRequest(models.Model):
                     'name': l.product_id.display_name,
                     'date_planned': fields.Date.today(),
                     'product_uom': l.uom_id.id,
+                    'order_sequence':l.order_sequence,
                 }))
             po = self.env['purchase.order'].create({
                 'partner_id': vendor_id,
