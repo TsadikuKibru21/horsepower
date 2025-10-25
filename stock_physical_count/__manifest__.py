@@ -9,7 +9,7 @@
         item code, product, location, quantities, and a computed difference.
     """,
     'author': 'Your Name',
-    'depends': ['stock'],
+    'depends': ['stock','custom_sales_warehouse'],
     'data': [
         'security/groups.xml',
         'security/ir.model.access.csv',
