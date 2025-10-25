@@ -117,10 +117,7 @@
             </xpath>
 
 
-            <xpath expr="//field[@name='order_line']/tree//field[@name='name']" position="attributes">
-                        <attribute name="invisible">team not in ['estimated_tender']</attribute>
-                </xpath>
-            
+          
 
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="team" readonly="1"/>
@@ -128,6 +125,11 @@
                 <field name="waranty_expiration_date" readonly="state in ['sale','done']"/>
                 
             </xpath>
+
+              <xpath expr="//field[@name='order_line']/tree//field[@name='name']" position="attributes">
+                        <attribute name="invisible">team not in ['estimated_tender']</attribute>
+                </xpath>
+            
          
             
           
