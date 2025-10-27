@@ -57,9 +57,9 @@ export class ColorSchemeService {
 export const colorSchemeService = {
     dependencies: ["ui"],
 
-    start(env, services) {
-        userMenuRegistry.add("color_scheme.switch", switchColorSchemeItem);
-        return new ColorSchemeService(env, services);
-    },
+    // start(env, services) {
+    //     userMenuRegistry.add("color_scheme.switch", switchColorSchemeItem);
+    //     return new ColorSchemeService(env, services);
+    // },
 };
 serviceRegistry.add("color_scheme", colorSchemeService);
