@@ -194,6 +194,7 @@ class SaleOrder(models.Model):
                 if qty_remaining > 0:
                     _logger.info("Adding purchase request line for product: %s, Remaining: %s", product.name, qty_remaining)
                     purchase_request_lines.append((0, 0, {
+                        'order_sequence':line.order_sequence,
                         'product_id': product.id,
                         'quantity': qty_remaining,
                         'vendor':partner_id.id

@@ -116,13 +116,17 @@
                         <field name="product_cost" groups="custom_sales_warehouse.group_sale_cost_admin" readonly="state in ['sale','done']"/>
             </xpath>
 
+            <xpath expr="//field[@name='order_line']/tree//field[@name='purchase_price']" position="attributes">
+                        <attribute name="column_invisible">1</attribute>
+                </xpath>
+
 
           
 
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="team" readonly="1"/>
                 <field name="have_waranty" readonly="state in ['sale','done']"/>
-                <field name="waranty_expiration_date" readonly="state in ['sale','done']"/>
+                <field name="waranty_expiration_date" invisible="have_waranty == False" readonly="state in ['sale','done']"/>
                 
             </xpath>
 

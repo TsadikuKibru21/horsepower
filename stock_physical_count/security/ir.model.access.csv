@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_physical_count_line_user,physical.count.line.user,model_physical_count_line,stock_physical_count.group_physical_count_user,1,1,1,1
+access_physical_count_line_history_user,physical.count.line.history.user,model_physical_count_line_history,stock_physical_count.group_physical_count_user,1,0,0,0
