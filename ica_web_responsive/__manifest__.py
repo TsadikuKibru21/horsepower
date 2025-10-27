@@ -35,28 +35,28 @@
             'ica_web_responsive/static/src/views/**/*.xml',
 
             # Don't include dark mode files in light mode
-            ('remove', 'ica_web_responsive/static/src/**/*.dark.scss'),
+            # ('remove', 'ica_web_responsive/static/src/**/*.dark.scss'),
         ],
         'web.assets_web': [
             ('replace', 'web/static/src/main.js', 'ica_web_responsive/static/src/main.js'),
         ],
         # ========= Dark Mode =========
-        "web.dark_mode_variables": [
-            # web._assets_primary_variables
-            ('before', 'ica_web_responsive/static/src/scss/primary_variables.scss', 'ica_web_responsive/static/src/scss/primary_variables.dark.scss'),
-            ('before', 'ica_web_responsive/static/src/**/*.variables.scss', 'ica_web_responsive/static/src/**/*.variables.dark.scss'),
-            # web._assets_secondary_variables
-            ('before', 'ica_web_responsive/static/src/scss/secondary_variables.scss', 'ica_web_responsive/static/src/scss/secondary_variables.dark.scss'),
-        ],
-        "web.assets_web_dark": [
-            ('include', 'web.dark_mode_variables'),
-            # web._assets_backend_helpers
-            ('before', 'ica_web_responsive/static/src/scss/bootstrap_overridden.scss', 'ica_web_responsive/static/src/scss/bootstrap_overridden.dark.scss'),
-            ('after', 'web/static/lib/bootstrap/scss/_functions.scss',
-             'ica_web_responsive/static/src/scss/bs_functions_overridden.dark.scss'),
-            # assets_backend
-            'ica_web_responsive/static/src/**/*.dark.scss',
-        ],
+        # "web.dark_mode_variables": [
+        #     # web._assets_primary_variables
+        #     ('before', 'ica_web_responsive/static/src/scss/primary_variables.scss', 'ica_web_responsive/static/src/scss/primary_variables.dark.scss'),
+        #     ('before', 'ica_web_responsive/static/src/**/*.variables.scss', 'ica_web_responsive/static/src/**/*.variables.dark.scss'),
+        #     # web._assets_secondary_variables
+        #     ('before', 'ica_web_responsive/static/src/scss/secondary_variables.scss', 'ica_web_responsive/static/src/scss/secondary_variables.dark.scss'),
+        # ],
+        # "web.assets_web_dark": [
+        #     ('include', 'web.dark_mode_variables'),
+        #     # web._assets_backend_helpers
+        #     ('before', 'ica_web_responsive/static/src/scss/bootstrap_overridden.scss', 'ica_web_responsive/static/src/scss/bootstrap_overridden.dark.scss'),
+        #     ('after', 'web/static/lib/bootstrap/scss/_functions.scss',
+        #      'ica_web_responsive/static/src/scss/bs_functions_overridden.dark.scss'),
+        #     # assets_backend
+        #     'ica_web_responsive/static/src/**/*.dark.scss',
+        # ],
     },
     "license": "LGPL-3",
     "images": ["static/description/img.png"],
