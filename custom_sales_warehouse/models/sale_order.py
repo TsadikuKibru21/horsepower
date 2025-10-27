@@ -158,7 +158,7 @@ class SaleOrder(models.Model):
                             ('lot_stock_id', '=', other_quant.location_id.id)
                         ], limit=1)
                         if not source_warehouse:
-                            source_warehouse = other_quant.location_id.get_warehouse()
+                            source_warehouse = order.warehouse_id
 
                         # Use the internal picking type from the source warehouse
                         picking_type = self.env['stock.picking.type'].search([
