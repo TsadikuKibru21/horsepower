@@ -19,6 +19,7 @@ class StockMove(models.Model):
     def _onchange_product_id(self):
         if self.product_id:
             self.default_code = self.product_id.item_code_id
+            self.name = self.product_id.name
         else:
             self.default_code = False
             
