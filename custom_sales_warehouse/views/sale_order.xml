@@ -116,9 +116,7 @@
                         <field name="product_cost" groups="custom_sales_warehouse.group_sale_cost_admin" readonly="state in ['sale','done']"/>
             </xpath>
 
-            <xpath expr="//field[@name='order_line']/tree//field[@name='purchase_price']" position="attributes">
-                        <attribute name="column_invisible">1</attribute>
-                </xpath>
+         
 
 
           
