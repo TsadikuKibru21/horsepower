@@ -20,13 +20,21 @@
                                 <strong>Date:</strong>
                                 <span t-field="o.effective_date"/>
                             </div>
+                           
+                            
+                          
+                        </div>
+                        <div class="row mt-4">
                              <div class="col-6">
                                 <strong>Request From:</strong>
                                 <span t-field="o.sale_order.name"/>
                             </div>
+                           
                             
                           
                         </div>
+
+                         
 
                         <!-- Request Lines -->
                         <h4 class="mt-4">Request Lines</h4>
